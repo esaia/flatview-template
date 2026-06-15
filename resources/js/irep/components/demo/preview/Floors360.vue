@@ -33,7 +33,9 @@ const setFloors360Selection = inject<
 const globalStore = useGlobalStore();
 const { openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
-const selectedBlockId = ref<string | null>(null);
+const selectedBlockId = ref<string | null>(
+  props.blocks.length > 0 ? String(props.blocks[0].id) : null,
+);
 const selectedFloor = ref<FloorItem | null>(null);
 const svgRef = ref<HTMLDivElement | null>(null);
 const floorListRef = ref<HTMLDivElement | null>(null);
@@ -54,8 +56,8 @@ const hasUnblockedFloors = computed(() =>
 const floorsForBlock = computed(() =>
   props.floors
     .filter((f) =>
-      selectedBlockId.value
-        ? String(f.block_id) === selectedBlockId.value
+      selectedBlockId.value != null
+        ? String(f.block_id) === String(selectedBlockId.value)
         : !f.block_id,
     )
     .sort((a, b) => a.floor_number - b.floor_number),
@@ -97,7 +99,7 @@ const setPathAttributes = () => {
       conf = getConfValue(selectedFloor.value.conf);
       g.setAttribute("conf", conf);
     } else {
-      const flat = props.flats.find((f) => f.id === findedPolygon?.id);
+      const flat = props.flats.find((f) => String(f.id) === String(findedPolygon?.id));
       conf = getConfValue(flat?.conf ?? "");
       g.setAttribute("conf", conf);
     }
@@ -190,7 +192,7 @@ const selectBlock = (blockId: string | null) => {
   const currentFloorNumber = selectedFloor.value?.floor_number;
   selectedBlockId.value = blockId;
   const newFloors = props.floors
-    .filter((f) => (blockId ? String(f.block_id) === blockId : !f.block_id))
+    .filter((f) => (blockId != null ? String(f.block_id) === String(blockId) : !f.block_id))
     .sort((a, b) => a.floor_number - b.floor_number);
   const match =
     currentFloorNumber != null
@@ -216,7 +218,7 @@ watch(
 
       if (activePolygon.value.type === "flat") {
         const found = props.flats.find(
-          (flat) => flat.id === activePolygon.value.id,
+          (flat) => String(flat.id) === String(activePolygon.value.id),
         );
         activeFlat.value = found
           ? {
@@ -227,7 +229,7 @@ watch(
       } else if (activePolygon.value.type === "tooltip") {
         activeFlat.value =
           props.actions?.find(
-            (action) => action.id === activePolygon.value.id,
+            (action) => String(action.id) === String(activePolygon.value.id),
           ) ?? null;
       } else {
         activeFlat.value = null;
@@ -323,9 +325,6 @@ watch(
 );
 
 onMounted(() => {
-  if (props.blocks.length > 0) {
-    selectedBlockId.value = props.blocks[0].id;
-  }
   selectedFloor.value = floorsForBlock.value[0] ?? null;
   setFloors360Selection?.(
     selectedFloor.value?.id ?? null,

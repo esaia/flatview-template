@@ -69,6 +69,8 @@ const openGallery = (index: number) => {
   Fancybox.show(gallerySlides.value, {
     startIndex: index,
     Hash: false,
+    showClass: "f-fadeIn",
+    hideClass: "f-fadeOut",
     Images: { zoom: false, Panzoom: { maxScale: 2 } },
   });
 };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FlatItem, FloorItem } from "../../../../../types/DemoTypes";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { tr } from "../../../../../composable/helper";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import SwiperPagination from "../../../../../components/demo/uiComponents/SwiperPagination.vue";
@@ -66,24 +66,21 @@ const extractYoutubeId = (url: string): string => {
   return m ? m[1] : "";
 };
 
-const videoHtml = (img: any) =>
-  `<video controls style="max-height:80vh;max-width:100%;display:block;margin:auto"><source src="${img?.url}" type="${img?.mime}"></video>`;
-
-const gallerySlides = computed(() =>
-  imagesUrls.value.map((img: any) => {
-    if (isYoutube(img)) return { src: img?.url };
-    if (isVideo(img)) return { type: "html", html: videoHtml(img) };
-    return { src: img?.url, type: "image" };
-  }),
-);
-
-const openGallery = (index: number) => {
-  Fancybox.show(gallerySlides.value, {
-    startIndex: index,
-    Hash: false,
-    Images: { zoom: false, Panzoom: { maxScale: 2 } },
-  });
+const fancyboxOptions = {
+  Hash: false,
+  showClass: "f-fadeIn",
+  hideClass: "f-fadeOut",
+  Images: { zoom: false, Panzoom: { maxScale: 2 } },
 };
+
+onMounted(() => {
+  Fancybox.bind("[data-fancybox='flat-swiper-two']", fancyboxOptions);
+});
+
+onUnmounted(() => {
+  Fancybox.unbind("[data-fancybox='flat-swiper-two']");
+  Fancybox.close();
+});
 
 const syncDefaultPlanView = () => {
   const flat = props.flat;
@@ -137,9 +134,9 @@ watch(
             <a
               v-if="isYoutube(img)"
               :key="img?.url + i"
-              href="#"
+              :href="img?.url"
+              data-fancybox="flat-swiper-two"
               class="irep-flat-preview__left-3d irep-video-slide ire-relative ire-flex ire-h-full ire-w-full ire-cursor-pointer ire-items-center ire-justify-center"
-              @click.prevent="openGallery(i)"
             >
               <img
                 :src="`https://img.youtube.com/vi/${extractYoutubeId(img?.url)}/hqdefault.jpg`"
@@ -161,9 +158,10 @@ watch(
             <a
               v-else-if="isVideo(img)"
               :key="img?.url + i"
-              href="#"
+              :href="img?.url"
+              data-fancybox="flat-swiper-two"
+              data-type="video"
               class="irep-flat-preview__left-3d irep-video-slide ire-relative ire-flex ire-h-full ire-w-full ire-cursor-pointer ire-items-center ire-justify-center"
-              @click.prevent="openGallery(i)"
             >
               <video
                 :src="img?.url"
@@ -188,9 +186,9 @@ watch(
             <a
               v-else
               :key="img?.url + i"
-              href="#"
+              :href="img?.url"
+              data-fancybox="flat-swiper-two"
               class="irep-flat-preview__left-3d ire-flex ire-w-fit ire-cursor-pointer ire-items-center ire-justify-center"
-              @click.prevent="openGallery(i)"
             >
               <img
                 :src="img?.url"
@@ -279,11 +277,3 @@ watch(
 }
 </style>
 
-<style>
-.fancybox__dialog {
-  z-index: 9999999 !important;
-}
-.fancybox__backdrop {
-  z-index: 9999998 !important;
-}
-</style>
