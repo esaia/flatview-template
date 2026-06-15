@@ -19,26 +19,29 @@ const activeSlideIndex = ref(0);
 const show2dImage = ref(true);
 const key = ref(0);
 
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
+
 const hasImg = computed(() => {
-  return (
-    props.flat?.type?.image_3d?.length || props.flat?.type?.image_2d?.length
-  );
+  return flatTypeData.value?.image_3d?.length || flatTypeData.value?.image_2d?.length;
 });
 
 const hasBothPhoto = computed(() => {
   if (!props.flat) return false;
   return !!(
-    props.flat.type?.image_2d?.length && props.flat.type?.image_3d?.length
+    flatTypeData.value?.image_2d?.length && flatTypeData.value?.image_3d?.length
   );
 });
 
 const imagesUrls = computed(() => {
   if (!props.flat) return [];
   const arr =
-    show2dImage.value && props.flat.type?.image_2d?.length
-      ? props.flat.type.image_2d
-      : !show2dImage.value && props.flat.type?.image_3d?.length
-        ? props.flat.type.image_3d
+    show2dImage.value && flatTypeData.value?.image_2d?.length
+      ? flatTypeData.value.image_2d
+      : !show2dImage.value && flatTypeData.value?.image_3d?.length
+        ? flatTypeData.value.image_3d
         : [];
 
   return arr.slice(0, 6);
@@ -85,7 +88,7 @@ onUnmounted(() => {
 const syncDefaultPlanView = () => {
   const flat = props.flat;
   if (!flat) return;
-  if (!Object.keys(flat.type?.image_2d || {}).length) {
+  if (!flatTypeData.value?.image_2d?.length) {
     show2dImage.value = false;
   } else {
     show2dImage.value = true;
@@ -226,7 +229,7 @@ watch(
           :aria-label="tr('plan view')"
         >
           <div
-            v-if="flat?.type?.image_2d?.[0]?.url"
+            v-if="flatTypeData?.image_2d?.[0]?.url"
             role="tab"
             :aria-selected="show2dImage"
             class="irep-flat-swiper-two__view-tab ire-group ire-flex ire-min-w-0 ire-flex-1 ire-cursor-pointer ire-items-center ire-justify-center ire-gap-1.5 ire-rounded-full ire-fill-transparent ire-text-xs ire-transition-all ire-duration-300 hover:ire-bg-gray-100 hover:ire-text-black focus-visible:ire-outline focus-visible:ire-outline-2 focus-visible:ire-outline-offset-2 focus-visible:ire-outline-[var(--primary-color)] sm:ire-text-sm"
@@ -245,7 +248,7 @@ watch(
           </div>
 
           <div
-            v-if="flat?.type?.image_3d?.[0]?.url"
+            v-if="flatTypeData?.image_3d?.[0]?.url"
             role="tab"
             :aria-selected="!show2dImage"
             class="irep-flat-swiper-two__view-tab ire-group ire-flex ire-min-w-0 ire-flex-1 ire-cursor-pointer ire-items-center ire-justify-center ire-gap-1.5 ire-rounded-full ire-text-xs ire-transition-all ire-duration-300 hover:ire-bg-gray-100 hover:ire-text-black focus-visible:ire-outline focus-visible:ire-outline-2 focus-visible:ire-outline-offset-2 focus-visible:ire-outline-[var(--primary-color)] sm:ire-text-sm"

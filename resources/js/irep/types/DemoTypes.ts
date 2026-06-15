@@ -181,7 +181,8 @@ export interface FlatItem {
   price: string;
   offer_price: string;
   block_id?: string | null;
-  type?: TypeItem;
+  type?: TypeItem | null;
+  flat_type?: TypeItem | null;
   use_type?: boolean;
   files?: imageInterface[] | null;
   price_history: {

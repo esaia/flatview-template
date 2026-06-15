@@ -9,7 +9,7 @@ import type {
   ProjectMeta,
 } from "../../../types/DemoTypes";
 
-import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 import { useGlobalStore } from "../../../store/useGlobal";
 import { storeToRefs } from "pinia";
@@ -89,17 +89,17 @@ const setPathAttributes = () => {
 
     switch (findedPolygon?.type) {
       case "block": {
-        const block = props.blocks?.find((block) => block.id === polygonId);
+        const block = props.blocks?.find((block) => String(block.id) === String(polygonId));
         conf = getConfValue(block?.conf || "");
         break;
       }
       case "floor": {
-        const floor = props.floors?.find((floor) => floor.id === polygonId);
+        const floor = props.floors?.find((floor) => String(floor.id) === String(polygonId));
         conf = getConfValue(floor?.conf || "");
         break;
       }
       case "flat": {
-        const flat = props.flats?.find((flat) => flat.id === polygonId);
+        const flat = props.flats?.find((flat) => String(flat.id) === String(polygonId));
         conf = getConfValue(flat?.conf || "");
         break;
       }
@@ -116,11 +116,13 @@ const setPathAttributes = () => {
 };
 
 const onPathClick = (e: any) => {
-  const target: SVGPathElement = e.target;
-  if (target?.nodeName !== "path") return;
+  const target = e.target as SVGElement;
+  if (!["path", "circle"].includes(target?.nodeName)) return;
 
-  if (hoveredData.value?.conf === "reserved" && !openReservedFlat.value) return;
-  if (hoveredData.value?.conf === "sold" && !openSoldFlat.value) return;
+  if (activePolygon.value?.type === "flat") {
+    if (hoveredData.value?.conf === "reserved" && !openReservedFlat.value) return;
+    if (hoveredData.value?.conf === "sold" && !openSoldFlat.value) return;
+  }
 
   emits("changeComponent", activePolygon.value?.type || "", hoveredData?.value);
 };
@@ -155,13 +157,13 @@ watch(
       switch (activePolygon.value?.type) {
         case "floor":
           const activeFloor = props.floors?.find(
-            (floor) => floor.id === polygonId,
+            (floor) => String(floor.id) === String(polygonId),
           );
           hoveredData.value = activeFloor;
           break;
         case "block":
           const activeBlock = props.blocks?.find(
-            (block) => block?.id === polygonId,
+            (block) => String(block?.id) === String(polygonId),
           );
           hoveredData.value = activeBlock;
 
@@ -169,7 +171,7 @@ watch(
 
         case "flat":
           const activeFlat = props.flats?.find(
-            (flat) => flat?.id === polygonId,
+            (flat) => String(flat?.id) === String(polygonId),
           );
           hoveredData.value = activeFlat;
 
@@ -177,7 +179,7 @@ watch(
 
         case "tooltip":
           const activeAction = props.actions?.find(
-            (action) => action?.id === polygonId,
+            (action) => String(action?.id) === String(polygonId),
           );
 
           hoveredData.value = activeAction;
@@ -193,6 +195,11 @@ watch(
     }
   },
 );
+
+watch(projectSvg, async () => {
+  await nextTick();
+  setPathAttributes();
+});
 
 onMounted(() => {
   document.addEventListener("mousemove", onSvgMouseOver);

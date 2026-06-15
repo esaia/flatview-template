@@ -14,7 +14,7 @@ import { storeToRefs } from "pinia";
 
 const globalStore = useGlobalStore();
 const { getMetaValue } = globalStore;
-const { irePlaginWp, shortcodeData } = storeToRefs(globalStore);
+const { irePlaginWp, shortcodeData, openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
 const flow = ref<"projectFlow" | "floorFlow" | "blockFlow" | "flatFlow">(
   "projectFlow",
@@ -64,6 +64,13 @@ const floors = computed(() => {
     });
 
     floor.flats = flats;
+
+    if (!floor.counts?.minimum_price) {
+      const availableFlats = flats?.filter((flat) => !flat?.conf && !flat?.request_price);
+      const prices = availableFlats?.map((flat) => Number(flat?.price)).filter((p) => p > 0);
+      const minPrice = prices?.length ? Math.min(...prices) : 0;
+      floor.counts = { ...floor.counts, minimum_price: minPrice };
+    }
 
     const { conf } = floor || {};
 
@@ -141,12 +148,14 @@ const changeRoute = (flowType: string, polygonItem: any) => {
       break;
 
     case "floor":
+      if (polygonItem?.conf) break;
       flow.value = "floorFlow";
       hoveredData.value = polygonItem;
       activeFloor.value = polygonItem;
       break;
 
     case "block":
+      if (polygonItem?.conf) break;
       flow.value = "blockFlow";
       hoveredData.value = polygonItem;
       activeBlock.value = polygonItem;
@@ -157,6 +166,9 @@ const changeRoute = (flowType: string, polygonItem: any) => {
         const { link, target } = polygonItem?.follow_link;
         openNewTab(link, target);
       } else {
+        if (polygonItem?.conf === "reserved" && !openReservedFlat.value) break;
+        if (polygonItem?.conf === "sold" && !openSoldFlat.value) break;
+
         const customTypes = getMetaValue("custom_types");
         const customType = customTypes?.find(
           (t: any) => t.title === polygonItem?.conf,

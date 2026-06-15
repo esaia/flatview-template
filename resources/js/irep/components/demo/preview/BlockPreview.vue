@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 import BackButton from "../uiComponents/BackButton.vue";
 import type {
@@ -67,13 +67,14 @@ const onSvgMouseOver = (e: any) => {
 };
 
 const onPathClick = (e: any) => {
-  const target: SVGPathElement = e.target;
+  const target = e.target as SVGElement;
 
-  if (target?.nodeName !== "path") return;
+  if (!["path", "circle"].includes(target?.nodeName)) return;
 
-  if (activeFlatOrFloor.value?.conf === "reserved" && !openReservedFlat.value)
-    return;
-  if (activeFlatOrFloor.value?.conf === "sold" && !openSoldFlat.value) return;
+  if (activePolygon.value?.type === "flat") {
+    if (activeFlatOrFloor.value?.conf === "reserved" && !openReservedFlat.value) return;
+    if (activeFlatOrFloor.value?.conf === "sold" && !openSoldFlat.value) return;
+  }
 
   emits(
     "changeComponent",
@@ -99,12 +100,12 @@ const setPathAttributes = () => {
 
     switch (findedPolygon?.type) {
       case "floor": {
-        const floor = props.floors?.find((floor) => floor.id === polygonId);
+        const floor = props.floors?.find((floor) => String(floor.id) === String(polygonId));
         conf = getConfValue(floor?.conf || "");
         break;
       }
       case "flat": {
-        const flat = props.flats?.find((flat) => flat.id === polygonId);
+        const flat = props.flats?.find((flat) => String(flat.id) === String(polygonId));
         conf = getConfValue(flat?.conf || "");
         break;
       }
@@ -149,17 +150,17 @@ watch(
 
       if (activePolygon.value?.type === "floor") {
         const activeFindedfloor = props.floors?.find(
-          (floor) => floor?.id === activePolygon.value?.id,
+          (floor) => String(floor?.id) === String(activePolygon.value?.id),
         );
         activeFlatOrFloor.value = activeFindedfloor;
       } else if (activePolygon.value?.type === "flat") {
         const activeFindedflat = props.flats?.find(
-          (flat) => flat?.id === activePolygon.value?.id,
+          (flat) => String(flat?.id) === String(activePolygon.value?.id),
         );
         activeFlatOrFloor.value = activeFindedflat;
       } else if (activePolygon.value?.type === "tooltip") {
         const activeFindedflat = props.actions?.find(
-          (action) => action?.id === activePolygon.value?.id,
+          (action) => String(action?.id) === String(activePolygon.value?.id),
         );
         activeFlatOrFloor.value = activeFindedflat;
       } else {
@@ -171,6 +172,11 @@ watch(
     }
   },
 );
+
+watch(blockSvg, async () => {
+  await nextTick();
+  setPathAttributes();
+});
 
 onMounted(() => {
   setPathAttributes();

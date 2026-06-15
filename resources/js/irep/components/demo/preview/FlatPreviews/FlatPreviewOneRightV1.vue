@@ -13,8 +13,9 @@ import Button from "../../../../components/demo/uiComponents/Button.vue";
 import DownloadIcon from "../../../../components/icons/DownloadIcon.vue";
 import PhoneIcon from "../../../../components/icons/PhoneIcon.vue";
 import Price from "../../uiComponents/Price.vue";
+import { computed } from "vue";
 
-defineProps<{
+const props = defineProps<{
   flat: FlatItem | undefined;
   showForm: boolean;
   showCallbackButton: boolean;
@@ -23,6 +24,11 @@ defineProps<{
 const emit = defineEmits<{
   (e: "requestCallback"): void;
 }>();
+
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
 </script>
 
 <template>
@@ -45,17 +51,17 @@ const emit = defineEmits<{
       />
 
       <div
-        v-if="flat?.type?.title || flat?.type?.teaser"
+        v-if="flatTypeData?.title || flatTypeData?.teaser"
         class="irep-flat-preview__type ire-text-center"
       >
         <div class="irep-flat-preview__type-title ire-text-lg ire-font-medium ire-text-black">
-          {{ flat?.type?.title }}
+          {{ flatTypeData?.title }}
         </div>
         <div
-          v-if="flat?.type?.teaser"
+          v-if="flatTypeData?.teaser"
           class="irep-flat-preview__type-teaser ire-pt-2 ire-text-sm ire-uppercase ire-text-gray-500"
         >
-          {{ flat?.type?.teaser }}
+          {{ flatTypeData?.teaser }}
         </div>
       </div>
 
@@ -90,9 +96,9 @@ const emit = defineEmits<{
         />
 
         <FlatPreviewKeyValue
-          v-if="flat?.type?.area_m2"
+          v-if="flatTypeData?.area_m2"
           :keyName="tr('area')"
-          :value="getArea(flat?.type.area_m2)"
+          :value="getArea(flatTypeData?.area_m2)"
           keyClass="flat_area_key flat_date_key"
           valueClass="flat_area_value flat_date_value"
           class="irep-flat-preview__right-floor-area"
@@ -103,17 +109,17 @@ const emit = defineEmits<{
         </FlatPreviewKeyValue>
 
         <FlatPreviewKeyValue
-          v-if="flat?.type?.rooms_count"
+          v-if="flatTypeData?.rooms_count"
           :keyName="tr('room')"
-          :value="getRoomCount(flat.type.rooms_count)"
+          :value="getRoomCount(flatTypeData?.rooms_count)"
           keyClass="flat_rooms_key flat_date_key"
           valueClass="flat_rooms_value flat_date_value"
           class="irep-flat-preview__right-floor-room"
         />
 
-        <template v-if="flat?.type?.other?.length">
+        <template v-if="flatTypeData?.other?.length">
           <FlatPreviewKeyValue
-            v-for="other in flat.type.other"
+            v-for="other in flatTypeData?.other"
             :key="other.key"
             :keyName="other.key"
             :value="other.value"

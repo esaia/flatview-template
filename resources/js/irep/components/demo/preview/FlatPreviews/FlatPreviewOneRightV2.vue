@@ -13,6 +13,7 @@ import DownloadIcon from "../../../../components/icons/DownloadIcon.vue";
 import PhoneIcon from "../../../../components/icons/PhoneIcon.vue";
 import Price from "../../uiComponents/Price.vue";
 import FlatPreviewOneAttrRow from "./FlatPreviewOneAttrRow.vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   flat: FlatItem | undefined;
@@ -23,6 +24,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "requestCallback"): void;
 }>();
+
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
 </script>
 
 <template>
@@ -43,12 +49,12 @@ const emit = defineEmits<{
           </span>
         </div>
 
-        <div v-if="flat?.type?.title" class="irep-flat-preview__type-title ire-text-xl ire-font-semibold ire-text-gray-900">
-          {{ flat.type.title }}
+        <div v-if="flatTypeData?.title" class="irep-flat-preview__type-title ire-text-xl ire-font-semibold ire-text-gray-900">
+          {{ flatTypeData?.title }}
         </div>
 
-        <div v-if="flat?.type?.teaser" class="irep-flat-preview__type-teaser ire-text-sm ire-text-gray-400">
-          {{ flat.type.teaser }}
+        <div v-if="flatTypeData?.teaser" class="irep-flat-preview__type-teaser ire-text-sm ire-text-gray-400">
+          {{ flatTypeData?.teaser }}
         </div>
       </div>
 
@@ -72,21 +78,21 @@ const emit = defineEmits<{
         />
 
         <FlatPreviewOneAttrRow
-          v-if="flat?.type?.area_m2"
+          v-if="flatTypeData?.area_m2"
           :label="tr('area')"
-          :value="getArea(flat.type.area_m2)"
+          :value="getArea(flatTypeData?.area_m2)"
         >
-          {{ getArea(flat.type.area_m2) }} {{ getAreaUnitLabel() }}²
+          {{ getArea(flatTypeData?.area_m2) }} {{ getAreaUnitLabel() }}²
         </FlatPreviewOneAttrRow>
 
         <FlatPreviewOneAttrRow
-          v-if="flat?.type?.rooms_count"
+          v-if="flatTypeData?.rooms_count"
           :label="tr('room')"
-          :value="getRoomCount(flat.type.rooms_count)"
+          :value="getRoomCount(flatTypeData?.rooms_count)"
         />
 
         <FlatPreviewOneAttrRow
-          v-for="other in flat?.type?.other"
+          v-for="other in flatTypeData?.other"
           :key="other.key"
           :label="other.key"
           :value="other.value"

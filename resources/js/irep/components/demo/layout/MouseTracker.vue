@@ -21,16 +21,18 @@ const startAnimation = () => {
   if (animationFrameId) return;
 
   const animate = () => {
-    const x = 0.06;
-    mouseX.value = lerp(mouseX.value, targetX, x);
-    mouseY.value = lerp(mouseY.value, targetY, x);
+    const t = 0.08;
+    mouseX.value = lerp(mouseX.value, targetX, t);
+    mouseY.value = lerp(mouseY.value, targetY, t);
 
     if (
-      Math.abs(mouseX.value - targetX) > x ||
-      Math.abs(mouseY.value - targetY) > x
+      Math.abs(mouseX.value - targetX) > 0.1 ||
+      Math.abs(mouseY.value - targetY) > 0.1
     ) {
       animationFrameId = requestAnimationFrame(animate);
     } else {
+      mouseX.value = targetX;
+      mouseY.value = targetY;
       animationFrameId = null;
     }
   };
@@ -50,15 +52,14 @@ const handleMouseMove = (e: MouseEvent) => {
   let y = e.clientY - canvasRect.top;
 
   if (tooltip && hoverdPath) {
-    const pathRect = hoverdPath.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     const halfCanvasX = canvasRect.left + canvasRect.width / 2;
 
-    const isRight = pathRect.left > halfCanvasX;
+    const isRight = e.clientX > halfCanvasX;
     const isBottom = e.clientY - canvasRect.top > canvasRect.height / 2;
 
-    x = e.clientX - canvasRect.left - (isRight ? tooltipRect.width : -20);
-    y = e.clientY - canvasRect.top - (isBottom ? tooltipRect.height : -20);
+    x = e.clientX - canvasRect.left - (isRight ? tooltipRect.width + 12 : -20);
+    y = e.clientY - canvasRect.top - (isBottom ? tooltipRect.height + 12 : -20);
 
     x = Math.max(0, Math.min(canvasRect.width - tooltipRect.width, x));
     y = Math.max(0, Math.min(canvasRect.height - tooltipRect.height, y));
@@ -67,7 +68,8 @@ const handleMouseMove = (e: MouseEvent) => {
   targetX = x;
   targetY = y;
 
-  if (isFirstRun.value) {
+  // Snap immediately when tooltip first appears (mouseX stuck at -400)
+  if (isFirstRun.value || mouseX.value < -100) {
     mouseX.value = targetX;
     mouseY.value = targetY;
     isFirstRun.value = false;

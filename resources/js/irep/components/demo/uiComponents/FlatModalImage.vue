@@ -26,9 +26,14 @@ const show2dImage = ref(true);
 const selectedFloor = ref(0);
 const key = ref(0);
 
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
+
 const hasBothPhoto = computed(() => {
   return !!(
-    props.flat?.type?.image_2d?.length && props.flat?.type?.image_3d?.length
+    flatTypeData.value?.image_2d?.length && flatTypeData.value?.image_3d?.length
   );
 });
 
@@ -48,10 +53,10 @@ const videoHtml = (img: any) =>
 
 const imagesUrls = computed(() => {
   const arr =
-    show2dImage.value && props.flat.type?.image_2d?.length
-      ? props.flat.type?.image_2d
-      : !show2dImage.value && props.flat.type?.image_3d?.length
-        ? props.flat.type?.image_3d
+    show2dImage.value && flatTypeData.value?.image_2d?.length
+      ? flatTypeData.value?.image_2d
+      : !show2dImage.value && flatTypeData.value?.image_3d?.length
+        ? flatTypeData.value?.image_3d
         : [];
 
   return arr.slice(0, 6);
@@ -101,7 +106,7 @@ watch(
 );
 
 onMounted(() => {
-  if (!Object.keys(props.flat?.type?.image_2d || {})?.length) {
+  if (!flatTypeData.value?.image_2d?.length) {
     show2dImage.value = false;
   } else {
     show2dImage.value = true;
@@ -254,7 +259,7 @@ onMounted(() => {
             :aria-label="tr('plan view')"
           >
             <div
-              v-if="flat?.type?.image_2d?.[0]?.url"
+              v-if="flatTypeData?.image_2d?.[0]?.url"
               role="tab"
               :aria-selected="show2dImage"
               class="irep-flat-modal-image__view-tab ire-group ire-flex ire-min-w-0 ire-flex-1 ire-cursor-pointer ire-items-center ire-justify-center ire-gap-2 ire-rounded-full ire-fill-transparent ire-px-2 ire-py-1 ire-text-sm ire-transition-all ire-duration-500 hover:ire-text-black"
@@ -272,7 +277,7 @@ onMounted(() => {
             </div>
 
             <div
-              v-if="flat?.type?.image_3d?.[0]?.url"
+              v-if="flatTypeData?.image_3d?.[0]?.url"
               role="tab"
               :aria-selected="!show2dImage"
               class="irep-flat-modal-image__view-tab ire-group ire-flex ire-min-w-0 ire-flex-1 ire-cursor-pointer ire-items-center ire-justify-center ire-gap-2 ire-rounded-full ire-px-2 ire-py-1 ire-text-sm ire-transition-all ire-duration-500 hover:ire-text-black"

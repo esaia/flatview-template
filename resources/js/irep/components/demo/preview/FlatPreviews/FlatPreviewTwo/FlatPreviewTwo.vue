@@ -27,6 +27,11 @@ const props = defineProps<{
 
 const showForm = ref(false);
 
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
+
 const globalStore = useGlobalStore();
 const { getMetaValue } = globalStore;
 const { irePlaginWp, shortcodeData } = storeToRefs(globalStore);
@@ -47,15 +52,16 @@ const handleRequestCallbackClick = () => {
     getMetaValue("redirect_to_callback_url") === "true"
   ) {
     const flat = props.flat;
+    const typeData = flatTypeData.value;
     const formattedFlat = flat
       ? {
           ...flat,
-          type: flat.type
+          type: typeData
             ? {
-                ...flat.type,
-                other: transformOtherToKeyValue(flat.type?.other ?? []),
+                ...typeData,
+                other: transformOtherToKeyValue(typeData?.other ?? []),
               }
-            : flat.type,
+            : typeData,
         }
       : null;
 
@@ -101,10 +107,10 @@ const handleRequestCallbackClick = () => {
             </div>
 
             <div
-              v-if="flat?.type?.teaser"
+              v-if="flatTypeData?.teaser"
               class="irep-flat-preview-two__teaser ire-mt-2 ire-text-left ire-text-sm ire-text-gray-700"
             >
-              {{ flat?.type?.teaser }}
+              {{ flatTypeData?.teaser }}
             </div>
           </div>
 
@@ -141,9 +147,9 @@ const handleRequestCallbackClick = () => {
           /> -->
 
           <PreviewTwoKeyValue
-            v-if="flat?.type?.area_m2"
+            v-if="flatTypeData?.area_m2"
             :keyName="tr('area')"
-            :value="getArea(flat?.type.area_m2)"
+            :value="getArea(flatTypeData?.area_m2)"
           >
             <template #sufix>
               <span> {{ getAreaUnitLabel() }}² </span>
@@ -151,14 +157,14 @@ const handleRequestCallbackClick = () => {
           </PreviewTwoKeyValue>
 
           <PreviewTwoKeyValue
-            v-if="flat?.type?.rooms_count"
+            v-if="flatTypeData?.rooms_count"
             :keyName="tr('room')"
-            :value="getRoomCount(flat.type.rooms_count)"
+            :value="getRoomCount(flatTypeData?.rooms_count)"
           />
 
-          <template v-if="flat?.type?.other?.length">
+          <template v-if="flatTypeData?.other?.length">
             <PreviewTwoKeyValue
-              v-for="other in flat.type.other.filter((i: any) => i?.value)"
+              v-for="other in flatTypeData?.other.filter((i: any) => i?.value)"
               :key="other.key"
               :keyName="other.key"
               :value="other.value"

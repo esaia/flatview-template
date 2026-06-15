@@ -26,10 +26,13 @@ const showForm = ref(false);
 
 const flatPreviewOneStyle = computed(() => getMetaValue("flat_preview_one_style") || "1");
 
+const flatTypeData = computed(() => {
+  const useType = props.flat?.use_type === true || String(props.flat?.use_type) === "true";
+  return useType ? (props.flat?.type ?? props.flat?.flat_type) : (props.flat?.flat_type ?? props.flat?.type);
+});
+
 const hasImg = computed(() => {
-  return (
-    props.flat?.type?.image_3d?.length || props.flat?.type?.image_2d?.length
-  );
+  return flatTypeData.value?.image_3d?.length || flatTypeData.value?.image_2d?.length;
 });
 
 const showCallbackButton = computed(() => {
@@ -48,15 +51,16 @@ const handleRequestCallbackClick = () => {
     getMetaValue("redirect_to_callback_url") === "true"
   ) {
     const flat = props.flat;
+    const typeData = flatTypeData.value;
     const formattedFlat = flat
       ? {
           ...flat,
-          type: flat.type
+          type: typeData
             ? {
-                ...flat.type,
-                other: transformOtherToKeyValue(flat.type?.other ?? []),
+                ...typeData,
+                other: transformOtherToKeyValue(typeData?.other ?? []),
               }
-            : flat.type,
+            : typeData,
         }
       : null;
 

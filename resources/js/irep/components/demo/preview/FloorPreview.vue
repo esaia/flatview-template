@@ -6,7 +6,7 @@ import type {
   FloorItem,
 } from "../../../types/DemoTypes";
 
-import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import PreviewLayout from "../layout/PreviewLayout.vue";
 import PreviewSelect from "../form/PreviewSelect.vue";
 import BackButton from "../uiComponents/BackButton.vue";
@@ -106,8 +106,8 @@ const onSvgMouseOver = (e: any) => {
 };
 
 const onPathClick = (e: any) => {
-  const target: SVGPathElement = e.target;
-  if (target?.nodeName !== "path") return;
+  const target = e.target as SVGElement;
+  if (!["path", "circle"].includes(target?.nodeName)) return;
 
   if (activeFlat.value && "conf" in activeFlat.value) {
     if (activeFlat.value?.conf === "reserved" && !openReservedFlat.value)
@@ -137,7 +137,7 @@ const setPathAttributes = () => {
         g.setAttribute("conf", conf || "");
       } else {
         const activeFlat = props.flats?.find(
-          (flat) => flat?.id === findedPolygon?.id,
+          (flat) => String(flat?.id) === String(findedPolygon?.id),
         );
 
         conf = getConfValue(activeFlat?.conf || "");
@@ -177,7 +177,7 @@ watch(
 
       if (activePolygon.value?.type === "flat") {
         const activeFindedflat = props.flats?.find(
-          (flat) => flat?.id === activePolygon.value?.id,
+          (flat) => String(flat?.id) === String(activePolygon.value?.id),
         );
 
         const perparedFlat: any = activeFindedflat
@@ -190,7 +190,7 @@ watch(
         activeFlat.value = perparedFlat;
       } else if (activePolygon.value?.type === "tooltip") {
         const activeFindedAction = props.actions?.find(
-          (action) => action?.id === activePolygon.value?.id,
+          (action) => String(action?.id) === String(activePolygon.value?.id),
         );
         activeFlat.value = activeFindedAction ?? null;
       } else {
@@ -229,12 +229,17 @@ watch(
   },
 );
 
+watch(floorSvg, async () => {
+  await nextTick();
+  setPathAttributes();
+});
+
 onMounted(() => {
   floorBlock.value = props.blocks?.find(
-    (block) => block?.id === props.floor?.block_id?.toString(),
+    (block) => String(block?.id) === String(props.floor?.block_id),
   );
   selectedFloor.value = floorsSelect.value?.find(
-    (floorSelect) => floorSelect?.value == props.floor?.id,
+    (floorSelect) => String(floorSelect?.value) === String(props.floor?.id),
   )?.value;
 
   setPathAttributes();

@@ -107,14 +107,20 @@ export const useGlobalStore = defineStore("global", () => {
 
     return list
       .map((t: any) => {
-        const key = String(t.value ?? "")
-          .replace(/\\/g, "\\\\")
-          .replace(/"/g, '\\"');
+        const escape = (s: string) =>
+          s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+        const slugKey = escape(String(t.value ?? ""));
+        const titleKey = escape(String(t.title ?? ""));
         const fill = t?.type_color || "var(--path-color)";
-        return (
-          `.path-color g[conf="${key}"] path { fill: ${fill}; }` +
-          `\n.path-color.path-hover-fill-only svg g[conf="${key}"]:hover path { fill: ${fill} !important; }`
-        );
+        const rules: string[] = [
+          `.path-color g[conf="${slugKey}"] path { fill: ${fill}; }`,
+          `.path-color.path-hover-fill-only svg g[conf="${slugKey}"]:hover path { fill: ${fill} !important; }`,
+        ];
+        if (titleKey !== slugKey) {
+          rules.push(`.path-color g[conf="${titleKey}"] path { fill: ${fill}; }`);
+          rules.push(`.path-color.path-hover-fill-only svg g[conf="${titleKey}"]:hover path { fill: ${fill} !important; }`);
+        }
+        return rules.join("\n");
       })
       .join("\n");
   });
