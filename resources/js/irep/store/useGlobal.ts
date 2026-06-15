@@ -1,8 +1,11 @@
 import type { FlatItem, ShortcodeData } from "../types/DemoTypes";
 import { defineStore } from "pinia";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, inject, reactive, ref, watch } from "vue";
 
-export const useGlobalStore = defineStore("global", () => {
+export const GLOBAL_STORE_KEY = "ireGlobalStore";
+
+export const createGlobalStore = (id: string) =>
+  defineStore(id, () => {
   const hoverdSvg = ref();
   const tooltip = ref("1");
 
@@ -206,3 +209,11 @@ export const useGlobalStore = defineStore("global", () => {
     setIrePlaginWp,
   };
 });
+
+export type GlobalStore = ReturnType<ReturnType<typeof createGlobalStore>>;
+
+export const useGlobalStore = (): GlobalStore => {
+  const store = inject<GlobalStore>(GLOBAL_STORE_KEY);
+  if (!store) throw new Error("useGlobalStore: no store provided — wrap with a Project or Project360 component");
+  return store;
+};

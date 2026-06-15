@@ -11,7 +11,7 @@ import PreviewLayout from "../layout/PreviewLayout.vue";
 import PreviewSelect from "../form/PreviewSelect.vue";
 import BackButton from "../uiComponents/BackButton.vue";
 import { useGlobalStore } from "../../../store/useGlobal";
-import { getConfValue, tr } from "../../../composable/helper";
+import { useGetConfValue, tr } from "../../../composable/helper";
 import { storeToRefs } from "pinia";
 import { usePinchZoom } from "../../../composable/usePinchZoom";
 
@@ -33,6 +33,7 @@ const props = defineProps<{
 
 const showFlatModal = inject<any>("showFlatModal");
 const globalStore = useGlobalStore();
+const getConfValue = useGetConfValue();
 const { openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
 const { containerRef: pinchContainerRef, contentStyle: pinchContentStyle } =

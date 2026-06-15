@@ -3,7 +3,7 @@ import ShortcodeWrapper from "../components/demo/layout/ShortcodeWrapper.vue";
 import Project360Viewer from "../components/demo/preview/Project360Viewer.vue";
 import type { ProjectInterface } from "../types/DemoTypes";
 import { computed, provide } from "vue";
-import { useGlobalStore } from "../store/useGlobal";
+import { createGlobalStore, GLOBAL_STORE_KEY } from "../store/useGlobal";
 
 interface IrePlagin {
   nonce: string;
@@ -19,11 +19,12 @@ const props = defineProps<{
   irePlugin: IrePlagin;
 }>();
 
-const globalStore = useGlobalStore();
+const globalStore = createGlobalStore(`ire-project360-${props.data?.project?.id ?? Math.random()}`)();
 
 globalStore.setData(props.data);
 globalStore.setIrePlaginWp(props.irePlugin);
 
+provide(GLOBAL_STORE_KEY, globalStore);
 provide("fromListView", false);
 
 const project = computed<ProjectInterface>(() => props.data.project);

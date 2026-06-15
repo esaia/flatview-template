@@ -10,7 +10,7 @@ defineProps({
 
 <template>
     <div>
-        <!-- <IreProject360 :project-id="projectId ?? 1" /> -->
+        <IreProject360 :project-id="projectId ?? 1" />
         <IreProject :project-id="projectId ?? 4" />
     </div>
 </template>

@@ -6,7 +6,6 @@ import type {
   ImageInterface360,
   PolygonDataCollection,
 } from "../types/DemoTypes";
-import { getConfValue } from "./helper";
 import { useGlobalStore } from "../store/useGlobal";
 import { storeToRefs } from "pinia";
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
@@ -83,6 +82,12 @@ export function useProject360(options: UseProject360Options) {
 
   const globalStore = useGlobalStore();
   const { shortcodeData, flats: storeFlats } = storeToRefs(globalStore);
+
+  const getConfValue = (conf: string) => {
+    const customTypes = globalStore.getMetaValue("custom_types");
+    const customType = customTypes?.find((t: any) => t.title === conf);
+    return customType ? customType.value : conf;
+  };
 
   // ---------------------------------------------------------------------------
   // Reactive state

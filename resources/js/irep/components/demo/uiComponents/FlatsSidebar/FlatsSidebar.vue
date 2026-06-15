@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
 
 import {
-  getFloorById,
+  useGetFloorById,
   normalizeFilterOptionsMeta,
   normalizeRangeOption,
   tr,
@@ -25,6 +25,7 @@ import HomeIcon from "../../../../components/icons/HomeIcon.vue";
 const globalStore = useGlobalStore();
 const { getMetaValue } = globalStore;
 const { flats, shortcodeData } = storeToRefs(globalStore);
+const getFloorById = useGetFloorById();
 
 const showOnlyFilteredOnSvg = defineModel<boolean>("showOnlyFilteredOnSvg", {
   default: false,
@@ -195,7 +196,7 @@ const filteredFlats = computed(() => {
       if (isFloorsView.value) {
         floorMatch =
           props.floors360FloorId != null
-            ? flat.floor_id === props.floors360FloorId
+            ? String(flat.floor_id) === String(props.floors360FloorId)
             : true;
       } else {
         floorMatch =
@@ -205,7 +206,7 @@ const filteredFlats = computed(() => {
 
       const blockMatch = isFloorsView.value
         ? props.floors360BlockId != null
-          ? flat.block_id === props.floors360BlockId
+          ? String(flat.block_id) === String(props.floors360BlockId)
           : !flat.block_id
         : true;
       const roomMatch =

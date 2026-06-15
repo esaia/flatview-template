@@ -13,7 +13,7 @@ import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from "
 import PreviewLayout from "../layout/PreviewLayout.vue";
 import { useGlobalStore } from "../../../store/useGlobal";
 import { storeToRefs } from "pinia";
-import { getConfValue } from "../../../composable/helper";
+import { useGetConfValue } from "../../../composable/helper";
 import { usePinchZoom } from "../../../composable/usePinchZoom";
 
 const emits = defineEmits<{
@@ -35,6 +35,7 @@ const props = defineProps<{
 
 const showFlatModal = inject<any>("showFlatModal");
 const globalStore = useGlobalStore();
+const getConfValue = useGetConfValue();
 const { openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
 const { containerRef: pinchContainerRef, contentStyle: pinchContentStyle } = usePinchZoom();

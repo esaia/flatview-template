@@ -7,7 +7,7 @@ import type {
 } from "../../../types/DemoTypes";
 import { computed, inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { useGlobalStore } from "../../../store/useGlobal";
-import { getConfValue, tr } from "../../../composable/helper";
+import { useGetConfValue, tr } from "../../../composable/helper";
 import { storeToRefs } from "pinia";
 import ChevronUp from "../../../components/icons/ChevronUp.vue";
 import ChevronDown from "../../../components/icons/ChevronDown.vue";
@@ -20,6 +20,7 @@ const props = defineProps<{
   svgFlatFilterActive?: boolean;
   svgVisibleFlatIds?: ReadonlySet<string>;
   focusFlatId?: string | null;
+  focusFloorId?: string | null;
   pathsVisible?: boolean;
 }>();
 
@@ -31,6 +32,7 @@ const setFloors360Selection = inject<
   (floorId: string | null, blockId: string | null) => void
 >("setFloors360Selection");
 const globalStore = useGlobalStore();
+const getConfValue = useGetConfValue();
 const { openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
 const selectedBlockId = ref<string | null>(
@@ -188,9 +190,9 @@ const onListPointerUp = (e: PointerEvent) => {
   detachListPointerListeners();
 };
 
-const selectBlock = (blockId: string | null) => {
+const selectBlock = (blockId: string | number | null) => {
   const currentFloorNumber = selectedFloor.value?.floor_number;
-  selectedBlockId.value = blockId;
+  selectedBlockId.value = blockId != null ? String(blockId) : null;
   const newFloors = props.floors
     .filter((f) => (blockId != null ? String(f.block_id) === String(blockId) : !f.block_id))
     .sort((a, b) => a.floor_number - b.floor_number);
@@ -269,7 +271,7 @@ watch(
   () => props.focusFlatId,
   (flatId) => {
     if (!flatId) return;
-    const flat = props.flats.find((f) => f.id === flatId);
+    const flat = props.flats.find((f) => String(f.id) === String(flatId));
     if (!flat) return;
     const targetFloor = props.floors.find(
       (f) => String(f.id) === String(flat.floor_id),
@@ -286,7 +288,7 @@ watch(
     setTimeout(() => {
       if (!svgRef.value) return;
       const polygon = targetFloor.polygon_data?.find(
-        (p) => p.type === "flat" && p.id === flatId,
+        (p) => p.type === "flat" && String(p.id) === String(flatId),
       );
       if (!polygon) return;
       const escaped =
@@ -315,6 +317,22 @@ watch(
 );
 
 watch(
+  () => props.focusFloorId,
+  (floorId) => {
+    if (!floorId) return;
+    const targetFloor = props.floors.find((f) => String(f.id) === String(floorId));
+    if (!targetFloor) return;
+    const targetBlockId = targetFloor.block_id ? String(targetFloor.block_id) : null;
+    if (targetBlockId !== selectedBlockId.value) {
+      selectBlock(targetBlockId);
+    } else {
+      selectedFloor.value = targetFloor;
+    }
+  },
+  { immediate: true },
+);
+
+watch(
   () => showFlatModal?.value,
   () => {
     if (!showFlatModal?.value) {
@@ -325,7 +343,9 @@ watch(
 );
 
 onMounted(() => {
-  selectedFloor.value = floorsForBlock.value[0] ?? null;
+  if (!selectedFloor.value) {
+    selectedFloor.value = floorsForBlock.value[0] ?? null;
+  }
   setFloors360Selection?.(
     selectedFloor.value?.id ?? null,
     selectedBlockId.value,
@@ -355,7 +375,7 @@ onUnmounted(() => {
         :key="block.id"
         class="irep-floors-360__block-tab ire-cursor-pointer ire-rounded ire-px-3 ire-py-1 ire-text-sm ire-font-medium ire-shadow ire-transition-colors"
         :class="
-          selectedBlockId === block.id
+          String(selectedBlockId) === String(block.id)
             ? 'ire-bg-black ire-text-white'
             : 'ire-bg-white ire-text-black hover:ire-bg-gray-100'
         "

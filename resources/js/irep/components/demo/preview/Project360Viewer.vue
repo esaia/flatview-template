@@ -178,7 +178,11 @@ const {
   onPolygonClick(polygon, type) {
     if (type === "flat") {
       activateFlat(hoveredData.value);
-    } else if (type === "block" || type === "floor") {
+    } else if (type === "floor") {
+      floors360FocusFloorId.value = null;
+      activeView.value = "floors";
+      floors360FocusFloorId.value = String(polygon.id);
+    } else if (type === "block") {
       emit("changeComponent", type as PolygonDataCollection["type"], polygon);
     }
   },
@@ -220,6 +224,7 @@ onMounted(() => {
 });
 
 const floors360FocusFlatId = ref<string | null>(null);
+const floors360FocusFloorId = ref<string | null>(null);
 
 provide("activateFlat", activateFlat);
 provide("focusFlatOnViewer", (flat: { id?: string } | null) => {
@@ -410,6 +415,7 @@ provide("focusFlatOnViewer", (flat: { id?: string } | null) => {
               :svg-flat-filter-active="showOnlyFilteredOnSvg"
               :svg-visible-flat-ids="filteredFlatIds"
               :focus-flat-id="floors360FocusFlatId"
+              :focus-floor-id="floors360FocusFloorId"
               :paths-visible="pathsVisible"
               class="ire-h-full ire-w-full"
             />

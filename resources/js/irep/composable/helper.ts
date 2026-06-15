@@ -137,6 +137,66 @@ export const getFloorById = (id: number | string) => {
   );
 };
 
+export const useGetFloorById = () => {
+  const globalStore = useGlobalStore();
+  return (id: number | string) => {
+    if (!id) return undefined;
+    return globalStore.shortcodeData?.floors?.find(
+      (floor) => String(floor.id) === String(id),
+    );
+  };
+};
+
+export const useGetPrice = () => {
+  const globalStore = useGlobalStore();
+  return (price: number): string => {
+    const { getMetaValue, priceRounded } = globalStore;
+    const isPriceSeparatorComma = getMetaValue("price_separator") === "comma";
+    const digit = priceRounded ? 0 : 2;
+    const formatOptions: Intl.NumberFormatOptions = {
+      minimumFractionDigits: digit,
+      maximumFractionDigits: digit,
+    };
+    let formatPrice = isPriceSeparatorComma
+      ? Number(price).toLocaleString("en-US", formatOptions)
+      : Number(price).toLocaleString("de-DE", formatOptions);
+    if (getMetaValue("currency") === "chf") {
+      formatPrice = formatPrice.replaceAll(",", "'");
+    }
+    return formatPrice;
+  };
+};
+
+export const useCurrencySymbol = () => {
+  const globalStore = useGlobalStore();
+  const currencyData = [
+    { value: "usd", symbol: "$" }, { value: "eur", symbol: "€" },
+    { value: "gbp", symbol: "£" }, { value: "jpy", symbol: "¥" },
+    { value: "aud", symbol: "A$" }, { value: "cad", symbol: "C$" },
+    { value: "chf", symbol: "CHF" }, { value: "cny", symbol: "¥" },
+    { value: "inr", symbol: "₹" }, { value: "sgd", symbol: "S$" },
+    { value: "nzd", symbol: "NZ$" }, { value: "krw", symbol: "₩" },
+    { value: "brl", symbol: "R$" }, { value: "rub", symbol: "₽" },
+    { value: "zar", symbol: "R" }, { value: "mxn", symbol: "Mex$" },
+    { value: "hkd", symbol: "HK$" }, { value: "try", symbol: "₺" },
+    { value: "sek", symbol: "kr" }, { value: "nok", symbol: "kr" },
+    { value: "dkk", symbol: "kr" }, { value: "pln", symbol: "zł" },
+    { value: "thb", symbol: "฿" }, { value: "idr", symbol: "Rp" },
+    { value: "myr", symbol: "RM" }, { value: "php", symbol: "₱" },
+    { value: "aed", symbol: "د.إ" }, { value: "sar", symbol: "﷼" },
+    { value: "qar", symbol: "﷼" }, { value: "kwd", symbol: "د.ك" },
+    { value: "bhd", symbol: ".د.ب" }, { value: "omr", symbol: "﷼" },
+    { value: "gel", symbol: "₾" },
+  ];
+  return (): string => {
+    const activeCurrency =
+      globalStore.shortcodeData?.meta
+        ?.find((item: any) => item.meta_key === "currency")
+        ?.meta_value?.toString() || "usd";
+    return currencyData.find((item) => item.value === activeCurrency)?.symbol || "$";
+  };
+};
+
 export const setQuery = (key: string, value: string) => {
   // @ts-ignore
   const url = new URL(window.location);
@@ -195,6 +255,17 @@ export const getConfValue = (conf: string) => {
 
   const customType = customTypes?.find((t: any) => t.title === conf);
   return customType ? customType.value : conf;
+};
+
+// Use this composable version when getConfValue will be called outside setup
+// (e.g. from watchers, onMounted, or event handlers)
+export const useGetConfValue = () => {
+  const globalStore = useGlobalStore();
+  return (conf: string): string => {
+    const customTypes = globalStore.getMetaValue("custom_types");
+    const customType = customTypes?.find((t: any) => t.title === conf);
+    return customType ? customType.value : conf;
+  };
 };
 
 export const getCustomTypeColor = (conf: string) => {

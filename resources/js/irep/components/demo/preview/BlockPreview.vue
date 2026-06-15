@@ -8,7 +8,7 @@ import type {
   FlatItem,
   FloorItem,
 } from "../../../types/DemoTypes";
-import { getConfValue } from "../../../composable/helper";
+import { useGetConfValue } from "../../../composable/helper";
 import { useGlobalStore } from "../../../store/useGlobal";
 import { storeToRefs } from "pinia";
 import { usePinchZoom } from "../../../composable/usePinchZoom";
@@ -30,6 +30,7 @@ const props = defineProps<{
 
 const showFlatModal = inject<any>("showFlatModal");
 const globalStore = useGlobalStore();
+const getConfValue = useGetConfValue();
 const { openReservedFlat, openSoldFlat } = storeToRefs(globalStore);
 
 const { containerRef: pinchContainerRef, contentStyle: pinchContentStyle } = usePinchZoom();

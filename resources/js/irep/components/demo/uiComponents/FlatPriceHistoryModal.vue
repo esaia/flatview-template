@@ -3,7 +3,7 @@ import Close from "../../../components/icons/Close.vue";
 import EyeIcon from "../../../components/icons/EyeIcon.vue";
 import EyeOffIcon from "../../../components/icons/EyeOffIcon.vue";
 import LineChartIcon from "../../../components/icons/LineChartIcon.vue";
-import { currencySymbol, getPrice, tr } from "../../../composable/helper";
+import { useGetPrice, useCurrencySymbol, tr } from "../../../composable/helper";
 import { useGlobalStore } from "../../../store/useGlobal";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref, useId } from "vue";
@@ -20,6 +20,8 @@ defineEmits<{
 
 const globalStore = useGlobalStore();
 const { cssVariables } = storeToRefs(globalStore);
+const getPrice = useGetPrice();
+const currencySymbol = useCurrencySymbol();
 
 const key = ref(0);
 
