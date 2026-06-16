@@ -10,7 +10,7 @@ defineProps({
 
 <template>
     <div class="grain antialiased">
-        <NavHeader :start-dark="true" :show-scrim="false" />
+        <NavHeader :start-dark="true" :show-scrim="false" :scroll-threshold="0" />
         <div class="pt-24">
             <IreProject360 :project-id="projectId" />
         </div>

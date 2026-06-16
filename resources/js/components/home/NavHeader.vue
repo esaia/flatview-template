@@ -150,11 +150,19 @@ function closeMenu() {
                 navTextClass,
             ]"
         >
-            <nav class="flex items-center gap-7">
+            <!-- Mobile: logo as left element -->
+            <Link
+                href="/"
+                class="md:hidden display font-medium text-xl tracking-tight select-none"
+                >V8</Link
+            >
+
+            <!-- Desktop: nav links -->
+            <nav class="hidden md:flex items-center gap-7">
                 <template v-for="(link, i) in topLinks" :key="link.href">
                     <span
                         v-if="i > 0"
-                        class="hidden md:block h-3.5 w-px bg-current/30"
+                        class="h-3.5 w-px bg-current/30"
                     ></span>
                     <a
                         :href="link.href"
@@ -169,6 +177,7 @@ function closeMenu() {
                 </template>
             </nav>
 
+            <!-- Desktop: centered logo -->
             <Link
                 href="/"
                 class="hidden md:block display font-medium text-xl tracking-tight absolute left-1/2 -translate-x-1/2 select-none"
@@ -230,55 +239,55 @@ function closeMenu() {
             </div>
 
             <nav
-                class="flex-1 flex flex-col justify-center gap-2 md:gap-3 -mt-8"
+                class="flex-1 flex flex-col justify-center gap-1 sm:gap-2 md:gap-3 -mt-8"
             >
                 <Link
                     href="/"
-                    class="menu-item flex items-baseline gap-5 w-fit"
+                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">01</span>
                     <span
-                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
                         >Home</span
                     >
                 </Link>
                 <a
                     href="/#rezidence"
-                    class="menu-item flex items-baseline gap-5 w-fit"
+                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">02</span>
                     <span
-                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
                         >Residences</span
                     >
                 </a>
                 <Link
                     href="/projects"
-                    class="menu-item flex items-baseline gap-5 w-fit"
+                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">03</span>
                     <span
-                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
                         >Projects</span
                     >
                 </Link>
                 <Link
                     href="/about"
-                    class="menu-item flex items-baseline gap-5 w-fit"
+                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">04</span>
                     <span
-                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
                         >About</span
                     >
                 </Link>
             </nav>
 
-            <div class="menu-foot-cta shrink-0 pb-2">
+            <div class="menu-foot-cta shrink-0 pb-6">
                 <Link
                     href="/project360/1"
                     class="menu-item inline-flex items-center gap-3 border border-white/30 rounded-full px-7 py-3.5 hover:bg-white hover:text-ink transition-colors duration-300"
@@ -295,7 +304,7 @@ function closeMenu() {
             <div
                 class="menu-foot shrink-0 flex flex-col md:flex-row md:items-end md:justify-between gap-6 text-sm text-white/60"
             >
-                <div class="flex gap-12">
+                <div class="flex gap-8 sm:gap-12">
                     <div>
                         <p
                             class="text-white/40 uppercase tracking-[0.2em] text-[11px] mb-2"

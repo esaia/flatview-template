@@ -10,6 +10,10 @@
     --color-paper: #fafaf8;
 }
 
+.irep-project-360-viewer {
+    height: 100svh;
+}
+
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
@@ -42,6 +46,8 @@ body {
 .mask-line {
     overflow: hidden;
     display: block;
+    padding-bottom: 0.15em;
+    margin-bottom: -0.15em;
 }
 .mask-line > span {
     display: inline-block;

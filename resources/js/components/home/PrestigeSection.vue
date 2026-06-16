@@ -60,7 +60,7 @@ onUnmounted(() => {
         <div class="grid md:grid-cols-2 gap-16 md:gap-24">
             <!-- Left: text -->
             <div>
-                <h2 class="display font-medium text-6xl md:text-8xl mb-12 reveal-head">
+                <h2 class="display font-medium text-[clamp(2.5rem,5.5vw,6rem)] mb-12 reveal-head">
                     <span class="mask-line"><span>A new</span></span>
                     <span class="mask-line"><span>prestigious</span></span>
                     <span class="mask-line"><span>address</span></span>
@@ -86,27 +86,25 @@ onUnmounted(() => {
                 >Choose your apartment</a>
             </div>
 
-            <!-- Right: stats -->
-            <div class="grid grid-cols-2 gap-y-20 gap-x-8 md:pl-16 self-center">
-                <div class="stat">
-                    <div class="display text-7xl md:text-8xl font-medium">
-                        <span class="num" data-target="188">0</span>
+            <!-- Right: stats — list on mobile/tablet, 2×2 grid on lg+ -->
+            <div class="self-center fade-up">
+                <div class="divide-y divide-ink/15 xl:divide-y-0 xl:grid xl:grid-cols-2 xl:gap-y-20 xl:gap-x-8 xl:pl-16">
+                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
+                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Apartments</span>
+                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-8xl"><span class="num" data-target="188">0</span></span>
                     </div>
-                    <div class="mt-3 text-[13px] tracking-[0.2em] uppercase text-ink/60">Apartments</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-7xl md:text-8xl font-medium">
-                        <span class="num" data-target="7">0</span>
+                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
+                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Penthouses</span>
+                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-8xl"><span class="num" data-target="7">0</span></span>
                     </div>
-                    <div class="mt-3 text-[13px] tracking-[0.2em] uppercase text-ink/60">Penthouses</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-6xl md:text-7xl font-medium">1Q&nbsp;2026</div>
-                    <div class="mt-3 text-[13px] tracking-[0.2em] uppercase text-ink/60">Sales launch</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-6xl md:text-7xl font-medium">3Q&nbsp;2028</div>
-                    <div class="mt-3 text-[13px] tracking-[0.2em] uppercase text-ink/60">Project completion</div>
+                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
+                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Sales launch</span>
+                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-7xl">1Q&nbsp;2026</span>
+                    </div>
+                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
+                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Project completion</span>
+                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-7xl">3Q&nbsp;2028</span>
+                    </div>
                 </div>
             </div>
         </div>
