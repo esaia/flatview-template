@@ -19,6 +19,14 @@ Route::get('/projects', function () {
     return Inertia::render('Projects');
 });
 
+Route::get('/project/{projectId}', function ($projectId) {
+    return Inertia::render('IreProjectPage', ['projectId' => $projectId]);
+});
+
+Route::get('/project360/{projectId}', function ($projectId) {
+    return Inertia::render('IreProject360Page', ['projectId' => $projectId]);
+});
+
 Route::get('/irep/shortcode-data/{projectId}', function ($projectId) {
     $project = Project::with(['meta', 'blocks', 'floors', 'flats.type', 'types', 'tooltips'])
         ->find($projectId);

@@ -32,16 +32,18 @@ const scrimOpacity = computed(() =>
 );
 
 onMounted(() => {
+    const panel = overlayRef.value.querySelector(".menu-panel");
     gsap.set(overlayRef.value, { autoAlpha: 0 });
+    gsap.set(panel, { scaleY: 0, transformOrigin: "top" });
 
     menuTl = gsap.timeline({
         paused: true,
-        onStart: () => gsap.set(overlayRef.value, { autoAlpha: 1 }),
         onReverseComplete: () => gsap.set(overlayRef.value, { autoAlpha: 0 }),
     });
 
     menuTl
-        .to(".menu-panel", { scaleY: 1, duration: 0.6, ease: "power4.inOut" })
+        .to(overlayRef.value, { autoAlpha: 1, duration: 0.4, ease: "none" })
+        .to(panel, { scaleY: 1, duration: 0.6, ease: "power4.inOut" }, 0)
         .from(
             overlayRef.value.querySelectorAll(".menu-item"),
             {
@@ -58,6 +60,7 @@ onMounted(() => {
                 overlayRef.value.querySelector(".menu-close-link"),
                 overlayRef.value.querySelector("#menuClose"),
                 overlayRef.value.querySelector(".menu-foot"),
+                overlayRef.value.querySelector(".menu-foot-cta"),
             ],
             {
                 opacity: 0,
@@ -235,7 +238,10 @@ function closeMenu() {
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">01</span>
-                    <span class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]">Home</span>
+                    <span
+                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        >Home</span
+                    >
                 </Link>
                 <a
                     href="/#rezidence"
@@ -243,7 +249,10 @@ function closeMenu() {
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">02</span>
-                    <span class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]">Residences</span>
+                    <span
+                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        >Residences</span
+                    >
                 </a>
                 <Link
                     href="/projects"
@@ -251,7 +260,10 @@ function closeMenu() {
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">03</span>
-                    <span class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]">Projects</span>
+                    <span
+                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        >Projects</span
+                    >
                 </Link>
                 <Link
                     href="/about"
@@ -259,9 +271,26 @@ function closeMenu() {
                     @click="closeMenu"
                 >
                     <span class="text-xs text-white/40 font-mono">04</span>
-                    <span class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]">About</span>
+                    <span
+                        class="menu-text display font-medium text-6xl md:text-8xl leading-[1.05]"
+                        >About</span
+                    >
                 </Link>
             </nav>
+
+            <div class="menu-foot-cta shrink-0 pb-2">
+                <Link
+                    href="/project360/1"
+                    class="menu-item inline-flex items-center gap-3 border border-white/30 rounded-full px-7 py-3.5 hover:bg-white hover:text-ink transition-colors duration-300"
+                    @click="closeMenu"
+                >
+                    <span
+                        class="text-[13px] font-semibold tracking-[0.2em] uppercase"
+                        >See Apartments</span
+                    >
+                    <span class="text-lg leading-none">→</span>
+                </Link>
+            </div>
 
             <div
                 class="menu-foot shrink-0 flex flex-col md:flex-row md:items-end md:justify-between gap-6 text-sm text-white/60"

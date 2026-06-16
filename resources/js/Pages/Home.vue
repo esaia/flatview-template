@@ -9,7 +9,6 @@ import MarqueeSection from "../components/home/MarqueeSection.vue";
 import SplitSection from "../components/home/SplitSection.vue";
 import GeniusLoci from "../components/home/GeniusLoci.vue";
 import FooterSection from "../components/home/FooterSection.vue";
-import IreProject360 from "../irep/shortcodes/IreProject360.vue";
 
 defineProps({
     appName: String,
@@ -27,8 +26,7 @@ onUnmounted(() => window.removeEventListener("load", onLoad));
     <div class="grain antialiased">
         <NavHeader />
         <HeroSlider />
-        <!-- <IreProject360 project-id="1" /> -->
-        <PrestigeSection />
+<PrestigeSection />
         <ParallaxSection />
         <MarqueeSection />
         <SplitSection
