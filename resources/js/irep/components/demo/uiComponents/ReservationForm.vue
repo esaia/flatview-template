@@ -5,7 +5,7 @@ import Button from "./Button.vue";
 import createAxios from "../../../utils/axios";
 import { useGlobalStore } from "../../../store/useGlobal";
 import type { FlatItem } from "../../../types/DemoTypes";
-import { tr } from "../../../composable/helper";
+import { useTr } from "../../../composable/helper";
 
 const emit = defineEmits<{
   (e: "hideForm"): void;
@@ -16,6 +16,7 @@ const props = defineProps<{
 }>();
 
 const globalStore = useGlobalStore();
+const tr = useTr();
 
 const obj = ref({
   project_id: props.flat?.project_id,
@@ -86,7 +87,7 @@ const handleSubmit = async () => {
 
   loading.value = true;
 
-  const { data } = await createAxios().post("", {
+  const { data } = await createAxios(globalStore.irePlaginWp?.ajax_url ?? "").post("", {
     action: "irep_create_reservation",
     nonce: globalStore.irePlaginWp?.nonce,
     ...obj.value,

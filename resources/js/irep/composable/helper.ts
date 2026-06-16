@@ -8,6 +8,14 @@ export const tr = (key: string) => {
   return (globalStore.translations as any)?.[key] || key;
 };
 
+export const useTr = () => {
+  const globalStore = useGlobalStore();
+  return (key: string): string => {
+    if (!globalStore.translations) return key;
+    return (globalStore.translations as any)?.[key] || key;
+  };
+};
+
 export const currencySymbol = () => {
   const currencyData = [
     { title: "🇺🇸 USD", value: "usd", symbol: "$" }, // United States
