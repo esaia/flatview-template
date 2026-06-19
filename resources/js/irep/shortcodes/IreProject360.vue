@@ -12,7 +12,7 @@ const error = ref<string | null>(null);
 
 const irePlugin = {
   nonce: "",
-  ajax_url: "",
+  ajax_url: "/irep/reservation",
   translations: {},
   is_premium: true,
   is_gold: true,

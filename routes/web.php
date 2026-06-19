@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use IrepPlugin\FilamentIrep\Models\Project;
+use IrepPlugin\FilamentIrep\Models\Reservation;
 use IrepPlugin\FilamentIrep\Models\Setting;
 
 Route::get('/', function () {
@@ -57,4 +59,18 @@ Route::get('/irep/shortcode-data/{projectId}', function ($projectId) {
         'meta'    => $meta,
         'actions' => $project->tooltips,
     ]]);
+});
+
+Route::post('/irep/reservation', function (Request $request) {
+    $validated = $request->validate([
+        'flat_id' => ['required', 'integer', 'exists:flats,id'],
+        'name'    => ['required', 'string', 'max:255'],
+        'phone'   => ['nullable', 'string', 'max:255'],
+        'email'   => ['nullable', 'email', 'max:255'],
+        'comment' => ['nullable', 'string'],
+    ]);
+
+    $reservation = Reservation::create($validated);
+
+    return response()->json(['success' => true, 'data' => $reservation]);
 });
