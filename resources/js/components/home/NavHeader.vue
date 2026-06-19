@@ -285,6 +285,17 @@ function closeMenu() {
                         >About</span
                     >
                 </Link>
+                <Link
+                    href="/contact"
+                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
+                    @click="closeMenu"
+                >
+                    <span class="text-xs text-white/40 font-mono">05</span>
+                    <span
+                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
+                        >Contact</span
+                    >
+                </Link>
             </nav>
 
             <div class="menu-foot-cta shrink-0 pb-6">

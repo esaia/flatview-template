@@ -19,6 +19,10 @@ Route::get('/projects', function () {
     return Inertia::render('Projects');
 });
 
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+});
+
 Route::get('/project/{projectId}', function ($projectId) {
     return Inertia::render('IreProjectPage', ['projectId' => $projectId]);
 });
