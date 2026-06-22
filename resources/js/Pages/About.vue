@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, nextTick } from 'vue'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NavHeader from '../components/home/NavHeader.vue'
 import AboutHero from '../components/about/AboutHero.vue'
@@ -13,8 +13,30 @@ import QuoteSection from '../components/about/QuoteSection.vue'
 import CtaSection from '../components/shared/CtaSection.vue'
 import FooterSection from '../components/home/FooterSection.vue'
 
-function onLoad() { ScrollTrigger.refresh() }
-onMounted(() => window.addEventListener('load', onLoad))
+// This page stacks several pinned ScrollTriggers (AboutParallax, VisionSection).
+// When the large hero images finish loading, ScrollTrigger refreshes and would
+// otherwise restore a stale scroll position — landing the page mid-content.
+// We clear that memory and force the top after each refresh.
+function resetToTop() {
+    ScrollTrigger.clearScrollMemory('manual')
+    window.scrollTo(0, 0)
+}
+
+function onLoad() {
+    ScrollTrigger.refresh()
+    resetToTop()
+}
+
+onMounted(async () => {
+    window.addEventListener('load', onLoad)
+    // Wait for child sections to register their pins, then settle at the top.
+    // Covers Inertia SPA navigations, where `window load` never fires again.
+    await nextTick()
+    resetToTop()
+    ScrollTrigger.refresh()
+    resetToTop()
+})
+
 onUnmounted(() => window.removeEventListener('load', onLoad))
 </script>
 
