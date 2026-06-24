@@ -11,7 +11,13 @@
 }
 
 .irep-project-360-viewer {
-    height: 100svh;
+    height: 80svh;
+}
+
+@media (min-width: 768px) {
+    .irep-project-360-viewer {
+        height: 90svh;
+    }
 }
 
 html {
