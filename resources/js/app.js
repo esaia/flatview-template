@@ -17,7 +17,10 @@ router.on('navigate', () => window.scrollTo(0, 0));
 const pinia = createPinia();
 
 createInertiaApp({
-    title: (title) => `${title} - ${import.meta.env.VITE_APP_NAME ?? 'Laravel'}`,
+    title: (title) => {
+        const appName = import.meta.env.VITE_APP_NAME ?? 'Flatview';
+        return title ? `${title} - ${appName}` : appName;
+    },
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
