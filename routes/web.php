@@ -35,7 +35,8 @@ Route::get('/project360/{projectId}', function ($projectId) {
 
 Route::get('/irep/shortcode-data/{projectId}', function ($projectId) {
     $project = Project::with(['meta', 'blocks', 'floors', 'flats.type', 'types', 'tooltips'])
-        ->find($projectId);
+        ->where(is_numeric($projectId) ? 'id' : 'slug', $projectId)
+        ->first();
 
     if (!$project) {
         return response()->json(['success' => false, 'message' => 'Project not found'], 404);

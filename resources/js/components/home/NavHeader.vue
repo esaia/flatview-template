@@ -1,12 +1,20 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import site from "../../config/siteContent";
 
 // Internal routes use Inertia's <Link>; hash/anchor targets use a plain <a>.
 const menuTag = (href) => (href.includes("#") ? "a" : Link);
+
+// The "See Apartments" target is admin-configurable (Settings page → Navigation).
+// The backend shares the resolved /project360/{slug} URL; fall back to the static
+// siteContent default when nothing is configured.
+const page = usePage();
+const menuCtaHref = computed(
+    () => page.props.seeApartmentsHref || site.nav.menuCtaHref,
+);
 
 const props = defineProps({
     startDark: { type: Boolean, default: false },
@@ -263,7 +271,7 @@ function closeMenu() {
 
             <div class="menu-foot-cta shrink-0 pb-6">
                 <Link
-                    :href="site.nav.menuCtaHref"
+                    :href="menuCtaHref"
                     class="menu-item inline-flex items-center gap-3 border border-white/30 rounded-full px-7 py-3.5 hover:bg-white hover:text-ink transition-colors duration-300"
                     @click="closeMenu"
                 >
