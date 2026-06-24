@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -43,10 +44,9 @@ onUnmounted(() => {
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/40"></div>
         </div>
         <div class="relative">
-            <p class="about-label text-[13px] tracking-[0.3em] uppercase text-white/70 mb-6">About the project</p>
+            <p class="about-label text-[13px] tracking-[0.3em] uppercase text-white/70 mb-6">{{ site.about.hero.label }}</p>
             <h1 class="display font-medium text-[16vw] md:text-[11vw] leading-[0.9]">
-                <span class="mask-line"><span class="h-word">A symphony</span></span>
-                <span class="mask-line"><span class="h-word">of living</span></span>
+                <span v-for="(line, i) in site.about.hero.title" :key="i" class="mask-line"><span class="h-word">{{ line }}</span></span>
             </h1>
         </div>
     </section>

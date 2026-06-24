@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -38,27 +39,20 @@ onUnmounted(() => {
 <template>
     <section ref="sectionRef" class="relative z-10 px-6 md:px-12 py-28 md:py-36 bg-ink text-white">
         <h2 class="display font-medium text-5xl md:text-7xl mb-16 reveal-head">
-            <span class="mask-line"><span>The makers</span></span>
+            <span class="mask-line"><span>{{ site.about.developers.headline }}</span></span>
         </h2>
         <div class="grid md:grid-cols-2 gap-12 md:gap-20">
-            <div class="border-t border-white/15 pt-8 fade-up">
+            <div
+                v-for="(maker, i) in site.about.developers.items"
+                :key="maker.name"
+                class="border-t border-white/15 pt-8 fade-up"
+            >
                 <div class="flex items-baseline justify-between mb-6">
-                    <h3 class="text-3xl font-bold tracking-tight">
-                        PENTA <span class="text-base font-normal tracking-[0.2em] text-white/50">REAL ESTATE</span>
-                    </h3>
-                    <span class="text-white/40 font-mono text-sm">01</span>
+                    <h3 class="text-3xl font-bold tracking-tight">{{ maker.name }}</h3>
+                    <span class="text-white/40 font-mono text-sm">{{ String(i + 1).padStart(2, '0') }}</span>
                 </div>
                 <p class="text-white/70 leading-relaxed max-w-md">
-                    One of Central Europe's leading real-estate developers, shaping landmark mixed-use and residential projects across Prague and beyond.
-                </p>
-            </div>
-            <div class="border-t border-white/15 pt-8 fade-up">
-                <div class="flex items-baseline justify-between mb-6">
-                    <h3 class="text-3xl font-bold tracking-tight flex items-center gap-2">PSN <span class="text-lg">△</span></h3>
-                    <span class="text-white/40 font-mono text-sm">02</span>
-                </div>
-                <p class="text-white/70 leading-relaxed max-w-md">
-                    A Prague developer with decades of experience in sensitive renewal of the city's most valuable addresses and historic fabric.
+                    {{ maker.description }}
                 </p>
             </div>
         </div>

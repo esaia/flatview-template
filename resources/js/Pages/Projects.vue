@@ -7,6 +7,7 @@ import ProjectList from '../components/projects/ProjectList.vue'
 import FeaturedGrid from '../components/projects/FeaturedGrid.vue'
 import CtaSection from '../components/shared/CtaSection.vue'
 import FooterSection from '../components/home/FooterSection.vue'
+import site from '../config/siteContent'
 
 function onLoad() { ScrollTrigger.refresh() }
 onMounted(() => window.addEventListener('load', onLoad))
@@ -28,9 +29,9 @@ onUnmounted(() => window.removeEventListener('load', onLoad))
         <ProjectList />
         <FeaturedGrid />
         <CtaSection
-            headline="Start a conversation"
-            link-text="Contact sales"
-            link-href="mailto:prodej@pentarealestate.com"
+            :headline="site.projects.cta.headline"
+            :link-text="site.projects.cta.linkText"
+            :link-href="site.projects.cta.linkHref"
         />
         <FooterSection />
     </div>

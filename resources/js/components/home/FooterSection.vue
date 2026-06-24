@@ -1,35 +1,36 @@
+<script setup>
+import site from '../../config/siteContent'
+</script>
+
 <template>
     <footer class="relative z-10 px-6 md:px-12 pt-24 md:pt-28 pb-10 bg-paper">
-        <h3 class="display font-medium text-4xl sm:text-5xl md:text-7xl mb-12 md:mb-16">Developer</h3>
+        <h3 class="display font-medium text-4xl sm:text-5xl md:text-7xl mb-12 md:mb-16">{{ site.footer.heading }}</h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 max-w-3xl text-sm leading-relaxed">
-            <div>
-                <p class="font-bold mb-3">Penta Real Estate</p>
-                <p class="text-ink/70">Na Florenci 2139/2<br />110 00 Praha 1</p>
-                <a href="mailto:prodej@pentarealestate.com" class="link-underline mt-4 inline-block text-ink/70">
-                    prodej@pentarealestate.com
-                </a>
-            </div>
-            <div>
-                <p class="font-bold mb-3">PSN</p>
-                <p class="text-ink/70">Seifertova 823/9<br />130 00 Praha 3</p>
-                <a href="mailto:prodej@psn.cz" class="link-underline mt-4 inline-block text-ink/70">
-                    prodej@psn.cz
+            <div v-for="company in site.footer.companies" :key="company.name">
+                <p class="font-bold mb-3">{{ company.name }}</p>
+                <p class="text-ink/70">
+                    <template v-for="(line, i) in company.addressLines" :key="i">
+                        {{ line }}<br v-if="i < company.addressLines.length - 1" />
+                    </template>
+                </p>
+                <a :href="`mailto:${company.email}`" class="link-underline mt-4 inline-block text-ink/70">
+                    {{ company.email }}
                 </a>
             </div>
         </div>
 
         <div class="mt-12 md:mt-16 flex flex-col-reverse sm:flex-row sm:items-end sm:justify-between gap-6 sm:gap-4 border-t border-ink/15 pt-8">
-            <p class="text-xs text-ink/50 max-w-xs">Terms of use · Privacy policy · Cookie policy</p>
-            <div class="display font-medium text-4xl sm:text-5xl md:text-6xl">VINOHRADSKÁ 8</div>
+            <p class="text-xs text-ink/50 max-w-xs">{{ site.footer.legalLinks }}</p>
+            <div class="display font-medium text-4xl sm:text-5xl md:text-6xl">{{ site.brand.name }}</div>
         </div>
 
         <div class="mt-8 md:mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-ink/15 pt-8 text-xs text-ink/50">
-            <span>Designed &amp; Created — clone demo</span>
-            <span class="sm:text-center">© 2026 All rights reserved by Penta Real Estate &amp; PSN</span>
+            <span>{{ site.footer.credit }}</span>
+            <span class="sm:text-center">{{ site.footer.copyright }}</span>
             <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-ink transition">FB</a>
-                <a href="#" class="hover:text-ink transition">IG</a>
+                <a :href="site.social.facebook" class="hover:text-ink transition">FB</a>
+                <a :href="site.social.instagram" class="hover:text-ink transition">IG</a>
             </div>
         </div>
     </footer>

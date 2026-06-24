@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -29,7 +30,7 @@ onUnmounted(() => {
 <template>
     <section ref="sectionRef" class="py-24 md:py-32 overflow-hidden bg-paper">
         <div class="marquee-track whitespace-nowrap display text-[16vw] font-medium leading-none">
-            An architectural work,&nbsp;inspired by music&nbsp;— An architectural work,&nbsp;inspired by music&nbsp;—
+            {{ site.home.marquee }}&nbsp;{{ site.home.marquee }}&nbsp;
         </div>
     </section>
 </template>

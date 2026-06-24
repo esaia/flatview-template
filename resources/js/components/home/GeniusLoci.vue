@@ -1,9 +1,16 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
+
+// Repeat the two keywords across the scrolling headline.
+const marqueeText = computed(() => {
+    const unit = `${site.home.geniusLoci.word1}  ·  ${site.home.geniusLoci.word2}  ·  `
+    return unit.repeat(3)
+})
 let ctx = null
 
 onMounted(() => {
@@ -33,7 +40,7 @@ onUnmounted(() => {
         <!-- Horizontal scrolling headline -->
         <div class="gl-marquee w-full overflow-x-clip">
             <div class="gl-text inline-block whitespace-nowrap display font-medium text-[14vw] leading-none">
-                Stories&nbsp;&nbsp;·&nbsp;&nbsp;Genius loci&nbsp;&nbsp;·&nbsp;&nbsp;Stories&nbsp;&nbsp;·&nbsp;&nbsp;Genius loci&nbsp;&nbsp;·&nbsp;&nbsp;Stories&nbsp;&nbsp;·&nbsp;&nbsp;Genius loci&nbsp;&nbsp;·&nbsp;&nbsp;
+                {{ marqueeText }}
             </div>
         </div>
 

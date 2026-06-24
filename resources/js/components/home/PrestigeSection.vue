@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -61,49 +62,34 @@ onUnmounted(() => {
             <!-- Left: text -->
             <div>
                 <h2 class="display font-medium text-[clamp(2.5rem,5.5vw,6rem)] mb-12 reveal-head">
-                    <span class="mask-line"><span>A new</span></span>
-                    <span class="mask-line"><span>prestigious</span></span>
-                    <span class="mask-line"><span>address</span></span>
+                    <span v-for="(line, i) in site.home.prestige.headline" :key="i" class="mask-line"><span>{{ line }}</span></span>
                 </h2>
                 <div class="max-w-xl space-y-6 text-[15px] md:text-base leading-relaxed text-ink/80 fade-up">
-                    <p>
-                        Vinohradská 8 represents a new prestigious address at the meeting point of Prague's
-                        historic centre and the famous Vinohrady district. In a place where the artistic spirit
-                        of the quarter naturally blends with a modern vision of luxury living, a unique project
-                        is taking shape under the renowned studio Jakub Cigler Architekti. The residential
-                        collection comprises 188 elegant apartments of every layout and 7 unique penthouses,
-                        which open up panoramic views over Prague's towers and rooftops.
-                    </p>
-                    <p>
-                        Behind the project stand Penta Real Estate and PSN — a union of experience and ambition
-                        that gives rise to one of the most exceptional addresses in Prague.
-                    </p>
-                    <p class="text-ink">Vinohradská 8 — A Symphony of Life.</p>
+                    <p
+                        v-for="(para, i) in site.home.prestige.body"
+                        :key="i"
+                        :class="{ 'text-ink': i === site.home.prestige.body.length - 1 }"
+                    >{{ para }}</p>
                 </div>
                 <a
                     href="#rezidence"
                     class="inline-block mt-12 bg-ink text-paper px-9 py-4 text-sm tracking-[0.1em] font-medium hover:bg-ink/80 transition-colors fade-up"
-                >Choose your apartment</a>
+                >{{ site.home.prestige.cta }}</a>
             </div>
 
             <!-- Right: stats — list on mobile/tablet, 2×2 grid on lg+ -->
             <div class="self-center fade-up">
                 <div class="divide-y divide-ink/15 xl:divide-y-0 xl:grid xl:grid-cols-2 xl:gap-y-20 xl:gap-x-8 xl:pl-16">
-                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
-                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Apartments</span>
-                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-8xl"><span class="num" data-target="188">0</span></span>
-                    </div>
-                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
-                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Penthouses</span>
-                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-8xl"><span class="num" data-target="7">0</span></span>
-                    </div>
-                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
-                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Sales launch</span>
-                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-7xl">1Q&nbsp;2026</span>
-                    </div>
-                    <div class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0">
-                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">Project completion</span>
-                        <span class="display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)] xl:text-7xl">3Q&nbsp;2028</span>
+                    <div
+                        v-for="(stat, i) in site.stats"
+                        :key="i"
+                        class="stat flex items-center justify-between py-7 gap-6 xl:flex-col-reverse xl:items-start xl:py-0 xl:gap-0"
+                    >
+                        <span class="text-[11px] tracking-[0.25em] uppercase text-ink/50 shrink-0 xl:mt-3">{{ stat.label }}</span>
+                        <span :class="['display font-medium text-[clamp(1.75rem,3.5vw,3.75rem)]', 'count' in stat ? 'xl:text-8xl' : 'xl:text-7xl']">
+                            <span v-if="'count' in stat" class="num" :data-target="stat.count">0</span>
+                            <template v-else>{{ stat.value }}</template>
+                        </span>
                     </div>
                 </div>
             </div>

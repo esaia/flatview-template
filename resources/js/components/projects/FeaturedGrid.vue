@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Link } from '@inertiajs/vue3'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -48,35 +49,28 @@ onUnmounted(() => {
 <template>
     <section ref="sectionRef" class="px-6 md:px-12 py-28 md:py-40">
         <h2 class="display font-medium text-5xl md:text-7xl mb-16 reveal-head">
-            <span class="mask-line"><span>Featured</span></span>
+            <span class="mask-line"><span>{{ site.projects.featured.headline }}</span></span>
         </h2>
         <div class="grid md:grid-cols-2 gap-6 md:gap-10">
-            <Link href="/" class="feat-card block cursor-pointer">
+            <component
+                :is="item.href === '/' ? Link : 'a'"
+                v-for="(item, i) in site.projects.featured.items"
+                :key="item.name"
+                :href="item.href"
+                :class="['feat-card block', i === 0 ? 'cursor-pointer' : 'md:mt-24']"
+            >
                 <div class="overflow-hidden mb-5">
                     <img
-                        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop"
-                        alt="Vinohradská 8"
+                        :src="item.img"
+                        :alt="item.name"
                         class="img-reveal w-full h-[55vh] object-cover"
                     />
                 </div>
                 <div class="flex items-center justify-between">
-                    <h3 class="display text-2xl md:text-3xl font-medium">Vinohradská 8</h3>
-                    <span class="text-sm text-ink/50">Residential · 2028</span>
+                    <h3 class="display text-2xl md:text-3xl font-medium">{{ item.name }}</h3>
+                    <span class="text-sm text-ink/50">{{ item.meta }}</span>
                 </div>
-            </Link>
-            <a href="#" class="feat-card block md:mt-24">
-                <div class="overflow-hidden mb-5">
-                    <img
-                        src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=1600&auto=format&fit=crop"
-                        alt="Symphony Residences"
-                        class="img-reveal w-full h-[55vh] object-cover"
-                    />
-                </div>
-                <div class="flex items-center justify-between">
-                    <h3 class="display text-2xl md:text-3xl font-medium">Symphony Residences</h3>
-                    <span class="text-sm text-ink/50">Residential · 2027</span>
-                </div>
-            </a>
+            </component>
         </div>
     </section>
 </template>

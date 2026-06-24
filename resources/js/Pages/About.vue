@@ -12,6 +12,7 @@ import DevelopersSection from '../components/about/DevelopersSection.vue'
 import QuoteSection from '../components/about/QuoteSection.vue'
 import CtaSection from '../components/shared/CtaSection.vue'
 import FooterSection from '../components/home/FooterSection.vue'
+import site from '../config/siteContent'
 
 // This page stacks several pinned ScrollTriggers (AboutParallax, VisionSection).
 // When the large hero images finish loading, ScrollTrigger refreshes and would
@@ -58,16 +59,16 @@ onUnmounted(() => window.removeEventListener('load', onLoad))
             image-url="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=1800&auto=format&fit=crop"
             image-alt="Architecture detail"
             :image-left="true"
-            label="02 — Architecture"
-            title="Composed in detail"
-            body="Under the renowned studio Jakub Cigler Architekti, every layout is conceived as a movement in a larger composition. Generous dispositions, large-format windows and spacious terraces open onto unrepeatable views — from Prague's rooftops and towers to the iconic panorama of Hradčany. Each home is designed in the spirit of Standard Platinum, with an emphasis on detail, security and comfort."
+            :label="site.about.split.label"
+            :title="site.about.split.title"
+            :body="site.about.split.body"
         />
         <DevelopersSection />
         <QuoteSection />
         <CtaSection
-            headline="Find your home"
-            link-text="Choose your apartment"
-            link-href="/#rezidence"
+            :headline="site.about.cta.headline"
+            :link-text="site.about.cta.linkText"
+            :link-href="site.about.cta.linkHref"
         />
         <FooterSection />
     </div>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -20,9 +21,9 @@ onUnmounted(() => {
 
 <template>
     <section ref="sectionRef" class="px-6 md:px-12 pt-40 md:pt-52 pb-16 md:pb-24">
-        <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-8 proj-h-fade">Selected work — 2024 / 2028</p>
+        <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-8 proj-h-fade">{{ site.projects.header.label }}</p>
         <h1 class="display font-medium text-[18vw] md:text-[13vw] leading-[0.85]">
-            <span class="mask-line"><span class="proj-h-word">Projects</span></span>
+            <span class="mask-line"><span class="proj-h-word">{{ site.projects.header.title }}</span></span>
         </h1>
         <div class="mt-10 flex flex-wrap gap-3 proj-h-fade">
             <slot name="filters" />

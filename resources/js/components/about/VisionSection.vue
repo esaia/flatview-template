@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let st = null
@@ -49,10 +50,10 @@ onUnmounted(() => {
 <template>
     <section id="vision" ref="sectionRef" class="px-6 md:px-12 py-28 md:py-40">
         <div class="grid md:grid-cols-12 gap-12">
-            <p class="md:col-span-3 text-[13px] tracking-[0.2em] uppercase text-ink/50">01 — The vision</p>
+            <p class="md:col-span-3 text-[13px] tracking-[0.2em] uppercase text-ink/50">{{ site.about.vision.label }}</p>
             <div class="md:col-span-9 max-w-3xl">
                 <p class="letter-fill display font-medium text-3xl md:text-5xl leading-[1.15]">
-                    Vinohradská 8 is a new prestigious address where the historic heart of Prague meets the cultured spirit of Vinohrady — a place composed like music, in harmony of space, light and emotion.
+                    {{ site.about.vision.body }}
                 </p>
             </div>
         </div>

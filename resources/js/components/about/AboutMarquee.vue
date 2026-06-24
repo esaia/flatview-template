@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let tween = null
@@ -22,7 +23,7 @@ onUnmounted(() => {
 <template>
     <section ref="sectionRef" class="relative z-10 py-20 md:py-28 overflow-x-clip bg-ink text-white">
         <div class="ab-marquee whitespace-nowrap display text-[13vw] font-medium leading-none">
-            Designed by Jakub Cigler Architekti&nbsp;&nbsp;·&nbsp;&nbsp;Designed by Jakub Cigler Architekti&nbsp;&nbsp;·&nbsp;&nbsp;
+            {{ site.about.marquee }}&nbsp;&nbsp;{{ site.about.marquee }}&nbsp;&nbsp;
         </div>
     </section>
 </template>

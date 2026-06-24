@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -53,25 +54,15 @@ onUnmounted(() => {
     <section ref="sectionRef" class="relative z-10 bg-paper px-6 md:px-12 py-32 md:py-48">
         <div class="grid md:grid-cols-12 gap-16 md:gap-12 items-start">
             <h2 class="md:col-span-4 display font-medium text-5xl md:text-7xl leading-[0.95] tracking-tight reveal-head">
-                <span class="mask-line"><span>By the</span></span>
-                <span class="mask-line"><span>numbers</span></span>
+                <span v-for="(line, i) in site.about.statsHeadline" :key="i" class="mask-line"><span>{{ line }}</span></span>
             </h2>
             <div class="md:col-span-7 md:col-start-6 grid grid-cols-2 gap-y-20 gap-x-12 md:gap-x-24">
-                <div class="stat">
-                    <div class="display text-7xl md:text-8xl font-medium leading-none tracking-tight"><span class="num" data-target="188">0</span></div>
-                    <div class="mt-4 text-[12px] tracking-[0.22em] uppercase text-ink/50">Apartments</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-7xl md:text-8xl font-medium leading-none tracking-tight"><span class="num" data-target="7">0</span></div>
-                    <div class="mt-4 text-[12px] tracking-[0.22em] uppercase text-ink/50">Penthouses</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-6xl md:text-7xl font-medium leading-none tracking-tight">1Q&nbsp;2026</div>
-                    <div class="mt-4 text-[12px] tracking-[0.22em] uppercase text-ink/50">Sales launch</div>
-                </div>
-                <div class="stat">
-                    <div class="display text-6xl md:text-7xl font-medium leading-none tracking-tight">3Q&nbsp;2028</div>
-                    <div class="mt-4 text-[12px] tracking-[0.22em] uppercase text-ink/50">Completion</div>
+                <div v-for="(stat, i) in site.stats" :key="i" class="stat">
+                    <div :class="['display font-medium leading-none tracking-tight', 'count' in stat ? 'text-7xl md:text-8xl' : 'text-6xl md:text-7xl']">
+                        <span v-if="'count' in stat" class="num" :data-target="stat.count">0</span>
+                        <template v-else>{{ stat.value }}</template>
+                    </div>
+                    <div class="mt-4 text-[12px] tracking-[0.22em] uppercase text-ink/50">{{ stat.label }}</div>
                 </div>
             </div>
         </div>

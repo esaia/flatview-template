@@ -2,6 +2,10 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
+
+const office = site.contact_page.office
+const f = site.contact_page.form
 
 const sectionRef = ref(null)
 let ctx = null
@@ -53,84 +57,88 @@ onUnmounted(() => {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <!-- Details -->
             <div class="lg:col-span-5">
-                <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-6 fade-up">01 — Sales office</p>
+                <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-6 fade-up">{{ office.label }}</p>
                 <h2 class="display font-medium text-4xl md:text-6xl mb-10 reveal-head">
-                    <span class="mask-line"><span>Visit us</span></span>
+                    <span class="mask-line"><span>{{ office.heading }}</span></span>
                 </h2>
 
                 <div class="space-y-8 text-sm leading-relaxed max-w-md">
                     <div class="fade-up">
-                        <p class="font-bold mb-2">Address</p>
-                        <p class="text-ink/70">Vinohradská 8<br />120 00 Praha 2<br />Czech Republic</p>
+                        <p class="font-bold mb-2">{{ office.addressLabel }}</p>
+                        <p class="text-ink/70">
+                            <template v-for="(line, i) in site.contact.addressLines" :key="i">
+                                {{ line }}<br v-if="i < site.contact.addressLines.length - 1" />
+                            </template>
+                        </p>
                     </div>
                     <div class="fade-up">
-                        <p class="font-bold mb-2">Email</p>
-                        <a href="mailto:prodej@pentarealestate.com" class="link-underline inline-block text-ink/70">
-                            prodej@pentarealestate.com
+                        <p class="font-bold mb-2">{{ office.emailLabel }}</p>
+                        <a :href="`mailto:${site.contact.email}`" class="link-underline inline-block text-ink/70">
+                            {{ site.contact.email }}
                         </a>
                     </div>
                     <div class="fade-up">
-                        <p class="font-bold mb-2">Phone</p>
-                        <a href="tel:+420000000000" class="link-underline inline-block text-ink/70">
-                            +420 000 000 000
+                        <p class="font-bold mb-2">{{ office.phoneLabel }}</p>
+                        <a :href="`tel:${site.contact.phone.replace(/\s/g, '')}`" class="link-underline inline-block text-ink/70">
+                            {{ site.contact.phone }}
                         </a>
                     </div>
                     <div class="fade-up">
-                        <p class="font-bold mb-2">Opening hours</p>
-                        <p class="text-ink/70">Mon — Fri · 9:00 — 18:00<br />Sat · by appointment</p>
+                        <p class="font-bold mb-2">{{ office.hoursLabel }}</p>
+                        <p class="text-ink/70">{{ site.contact.hoursWeekday }}<br />{{ site.contact.hoursWeekend }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Form -->
             <div class="lg:col-span-7">
-                <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-6 fade-up">02 — Send a message</p>
+                <p class="text-[13px] tracking-[0.3em] uppercase text-ink/50 mb-6 fade-up">{{ f.label }}</p>
 
                 <form v-if="!submitted" class="space-y-8" @submit.prevent="onSubmit">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div class="field fade-up">
-                            <label for="name" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">Name</label>
+                            <label for="name" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">{{ f.nameLabel }}</label>
                             <input
                                 id="name"
                                 v-model="form.name"
                                 type="text"
                                 required
-                                placeholder="Your full name"
+                                :placeholder="f.namePlaceholder"
                                 class="field-input"
                             />
                         </div>
                         <div class="field fade-up">
-                            <label for="email" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">Email</label>
+                            <label for="email" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">{{ f.emailLabel }}</label>
                             <input
                                 id="email"
                                 v-model="form.email"
                                 type="email"
                                 required
-                                placeholder="you@example.com"
+                                :placeholder="f.emailPlaceholder"
                                 class="field-input"
                             />
                         </div>
                     </div>
 
                     <div class="field fade-up">
-                        <label for="phone" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">Phone <span class="normal-case tracking-normal">(optional)</span></label>
+                        <label for="phone" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">{{ f.phoneLabel }} <span class="normal-case tracking-normal">{{ f.phoneOptional }}</span></label>
                         <input
                             id="phone"
                             v-model="form.phone"
                             type="tel"
-                            placeholder="+420 000 000 000"
+                            :placeholder="f.phonePlaceholder"
                             class="field-input"
                         />
                     </div>
 
                     <div class="field fade-up">
-                        <label for="message" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">Message</label>
+                        <label for="message" class="block text-xs tracking-[0.15em] uppercase text-ink/50 mb-3">{{ f.messageLabel }}</label>
                         <textarea
                             id="message"
                             v-model="form.message"
                             rows="5"
                             required
-                            placeholder="Tell us a little about what you're looking for…"
+                            :placeholder="f.messagePlaceholder"
                             class="field-input resize-none"
                         ></textarea>
                     </div>
@@ -139,13 +147,13 @@ onUnmounted(() => {
                         type="submit"
                         class="fade-up bg-ink text-paper px-10 py-4 text-sm tracking-[0.1em] font-medium hover:bg-ink/85 transition-colors"
                     >
-                        Send message
+                        {{ f.submit }}
                     </button>
                 </form>
 
                 <div v-else class="fade-up border border-ink/15 px-8 py-16 text-center">
-                    <h3 class="display font-medium text-3xl md:text-4xl mb-4">Thank you</h3>
-                    <p class="text-ink/70 max-w-sm mx-auto">Your message has been received. Our sales team will be in touch with you shortly.</p>
+                    <h3 class="display font-medium text-3xl md:text-4xl mb-4">{{ f.successHeading }}</h3>
+                    <p class="text-ink/70 max-w-sm mx-auto">{{ f.successBody }}</p>
                 </div>
             </div>
         </div>

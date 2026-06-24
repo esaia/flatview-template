@@ -3,6 +3,10 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import site from "../../config/siteContent";
+
+// Internal routes use Inertia's <Link>; hash/anchor targets use a plain <a>.
+const menuTag = (href) => (href.includes("#") ? "a" : Link);
 
 const props = defineProps({
     startDark: { type: Boolean, default: false },
@@ -154,7 +158,7 @@ function closeMenu() {
             <Link
                 href="/"
                 class="md:hidden display font-medium text-xl tracking-tight select-none"
-                >V8</Link
+                >{{ site.brand.short }}</Link
             >
 
             <!-- Desktop: nav links -->
@@ -181,7 +185,7 @@ function closeMenu() {
             <Link
                 href="/"
                 class="hidden md:block display font-medium text-xl tracking-tight absolute left-1/2 -translate-x-1/2 select-none"
-                >V8</Link
+                >{{ site.brand.short }}</Link
             >
 
             <button
@@ -216,7 +220,7 @@ function closeMenu() {
                     href="/"
                     class="menu-close-link display font-medium text-xl"
                     @click="closeMenu"
-                    >V8</Link
+                    >{{ site.brand.short }}</Link
                 >
                 <button
                     id="menuClose"
@@ -241,72 +245,31 @@ function closeMenu() {
             <nav
                 class="flex-1 flex flex-col justify-center gap-1 sm:gap-2 md:gap-3 -mt-8"
             >
-                <Link
-                    href="/"
+                <component
+                    :is="menuTag(item.href)"
+                    v-for="item in site.nav.menuItems"
+                    :key="item.href"
+                    :href="item.href"
                     class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
                     @click="closeMenu"
                 >
-                    <span class="text-xs text-white/40 font-mono">01</span>
+                    <span class="text-xs text-white/40 font-mono">{{ item.n }}</span>
                     <span
                         class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
-                        >Home</span
+                        >{{ item.label }}</span
                     >
-                </Link>
-                <a
-                    href="/#rezidence"
-                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
-                    @click="closeMenu"
-                >
-                    <span class="text-xs text-white/40 font-mono">02</span>
-                    <span
-                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
-                        >Residences</span
-                    >
-                </a>
-                <Link
-                    href="/projects"
-                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
-                    @click="closeMenu"
-                >
-                    <span class="text-xs text-white/40 font-mono">03</span>
-                    <span
-                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
-                        >Projects</span
-                    >
-                </Link>
-                <Link
-                    href="/about"
-                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
-                    @click="closeMenu"
-                >
-                    <span class="text-xs text-white/40 font-mono">04</span>
-                    <span
-                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
-                        >About</span
-                    >
-                </Link>
-                <Link
-                    href="/contact"
-                    class="menu-item flex items-baseline gap-4 md:gap-5 w-fit"
-                    @click="closeMenu"
-                >
-                    <span class="text-xs text-white/40 font-mono">05</span>
-                    <span
-                        class="menu-text display font-medium text-[clamp(2.5rem,10vw,6rem)] md:text-8xl leading-[1.05]"
-                        >Contact</span
-                    >
-                </Link>
+                </component>
             </nav>
 
             <div class="menu-foot-cta shrink-0 pb-6">
                 <Link
-                    href="/project360/1"
+                    :href="site.nav.menuCtaHref"
                     class="menu-item inline-flex items-center gap-3 border border-white/30 rounded-full px-7 py-3.5 hover:bg-white hover:text-ink transition-colors duration-300"
                     @click="closeMenu"
                 >
                     <span
                         class="text-[13px] font-semibold tracking-[0.2em] uppercase"
-                        >See Apartments</span
+                        >{{ site.nav.menuCta }}</span
                     >
                     <span class="text-lg leading-none">→</span>
                 </Link>
@@ -323,9 +286,9 @@ function closeMenu() {
                             Sales
                         </p>
                         <a
-                            href="mailto:prodej@pentarealestate.com"
+                            :href="`mailto:${site.contact.email}`"
                             class="link-underline"
-                            >prodej@pentarealestate.com</a
+                            >{{ site.contact.email }}</a
                         >
                     </div>
                     <div>
@@ -335,17 +298,17 @@ function closeMenu() {
                             Follow
                         </p>
                         <div class="flex gap-4">
-                            <a href="#" class="hover:text-white transition"
+                            <a :href="site.social.facebook" class="hover:text-white transition"
                                 >FB</a
                             >
-                            <a href="#" class="hover:text-white transition"
+                            <a :href="site.social.instagram" class="hover:text-white transition"
                                 >IG</a
                             >
                         </div>
                     </div>
                 </div>
                 <p class="display text-2xl md:text-3xl text-white/80">
-                    Vinohradská 8
+                    {{ site.brand.name }}
                 </p>
             </div>
         </div>

@@ -3,19 +3,14 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Link } from '@inertiajs/vue3'
+import site from '../../config/siteContent'
 
 const listRef = ref(null)
 const previewRef = ref(null)
 const activeFilter = ref('all')
 let ctx = null
 
-const projects = [
-    { id: 1, num: '01', name: 'Vinohradská 8', location: 'Prague 2 — Vinohrady', year: '2028', cat: 'residential', href: '/', img: 0 },
-    { id: 2, num: '02', name: 'Symphony Residences', location: 'Prague 1 — New Town', year: '2027', cat: 'residential', href: '#', img: 1 },
-    { id: 3, num: '03', name: 'Atrium Vinohrady', location: 'Prague 3 — Žižkov', year: '2026', cat: 'residential', href: '#', img: 2 },
-    { id: 4, num: '04', name: 'Florenc Offices', location: 'Prague 1 — Florenc', year: '2025', cat: 'commercial', href: '#', img: 3 },
-    { id: 5, num: '05', name: 'Seifertova Retail', location: 'Prague 3 — Vinohrady', year: '2025', cat: 'commercial', href: '#', img: 4 },
-]
+const projects = site.projects.list
 
 const previewImages = [
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop',
@@ -114,7 +109,7 @@ onUnmounted(() => {
     <!-- Filter pills -->
     <div class="flex flex-wrap gap-3 px-6 md:px-12 mb-0">
         <button
-            v-for="pill in [{ label: 'All', value: 'all' }, { label: 'Residential', value: 'residential' }, { label: 'Office & Retail', value: 'commercial' }]"
+            v-for="pill in site.projects.filters"
             :key="pill.value"
             :class="[
                 'text-[12px] tracking-[0.15em] uppercase rounded-full px-5 py-2 transition-colors',

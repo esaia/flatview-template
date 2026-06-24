@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const heroRef   = ref(null)
 const counterEl = ref(null)
@@ -21,7 +22,7 @@ const slides = [
     },
     {
         img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2400&auto=format&fit=crop',
-        alt: 'Prague skyline',
+        alt: 'City skyline',
     },
 ]
 
@@ -128,7 +129,7 @@ onUnmounted(() => {
 
             <!-- Title -->
             <h1 class="display font-medium leading-[0.93] tracking-tight" style="font-size: clamp(2rem, 10vw, 9.5rem)">
-                <span class="mask-line"><span class="hero-title">VINOHRADSKÁ 8</span></span>
+                <span class="mask-line"><span class="hero-title">{{ site.brand.name }}</span></span>
             </h1>
 
             <!-- Bottom row -->
@@ -136,20 +137,19 @@ onUnmounted(() => {
 
                 <!-- Tagline -->
                 <h2 class="display font-medium leading-[0.92]" style="font-size: clamp(2rem, 9vw, 5.5rem)">
-                    <span class="mask-line"><span class="hero-sub">Symphony</span></span>
-                    <span class="mask-line"><span class="hero-sub">of Life</span></span>
+                    <span class="mask-line"><span class="hero-sub">{{ site.brand.tagline1 }}</span></span>
+                    <span class="mask-line"><span class="hero-sub">{{ site.brand.tagline2 }}</span></span>
                 </h2>
 
                 <!-- Desktop: partner logos -->
                 <div class="hero-meta hidden md:flex items-center gap-6 text-white/90 opacity-0 shrink-0">
-                    <div class="text-right leading-tight">
-                        <div class="text-lg font-bold tracking-tight">PENTA</div>
-                        <div class="text-[10px] tracking-[0.25em]">REAL ESTATE</div>
-                    </div>
-                    <div class="h-10 w-px bg-white/40"></div>
-                    <div class="text-2xl font-bold tracking-tight flex items-center gap-1">
-                        PSN <span class="text-base">△</span>
-                    </div>
+                    <template v-for="(partner, i) in site.partners" :key="partner.name">
+                        <div v-if="i > 0" class="h-10 w-px bg-white/40"></div>
+                        <div class="text-right leading-tight">
+                            <div class="text-lg font-bold tracking-tight">{{ partner.name }}</div>
+                            <div v-if="partner.sub" class="text-[10px] tracking-[0.25em]">{{ partner.sub }}</div>
+                        </div>
+                    </template>
                 </div>
 
                 <!-- Mobile: slide counter -->
@@ -173,13 +173,6 @@ onUnmounted(() => {
             >
                 <span class="block h-full w-full bg-white origin-left scale-x-0"></span>
             </button>
-        </div>
-
-        <!-- Scroll indicator — desktop only (mobile bottom-right has the slide counter) -->
-        <div class="hidden md:flex absolute bottom-10 right-12 z-20 text-white/55 text-[10px] tracking-[0.35em] uppercase items-center gap-2">
-            <span>Scroll</span>
-            <span class="block w-px h-3.5 bg-white/40"></span>
-            <span>↓</span>
         </div>
 
     </section>

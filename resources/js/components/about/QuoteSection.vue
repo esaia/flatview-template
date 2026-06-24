@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
@@ -42,10 +43,10 @@ onUnmounted(() => {
     <section ref="sectionRef" class="relative z-10 bg-paper px-6 md:px-12 py-32 md:py-48">
         <blockquote class="max-w-5xl mx-auto text-center">
             <p class="display font-medium text-3xl md:text-6xl leading-[1.1] reveal-big">
-                "Vinohradská 8 connects the energy of the metropolis with the intimacy of home."
+                {{ site.about.quote.text }}
             </p>
             <footer class="mt-10 text-[13px] tracking-[0.2em] uppercase text-ink/50 fade-up">
-                Penta Real Estate &amp; PSN
+                {{ site.about.quote.attribution }}
             </footer>
         </blockquote>
     </section>
