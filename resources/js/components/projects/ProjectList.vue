@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import site from '../../config/siteContent'
 
 const listRef = ref(null)
@@ -11,6 +11,12 @@ const activeFilter = ref('all')
 let ctx = null
 
 const projects = site.projects.list
+
+// Same admin-configurable target as the burger menu's "See Apartments" link.
+const page = usePage()
+const projectHref = computed(
+    () => page.props.seeApartmentsHref || site.nav.menuCtaHref,
+)
 
 const previewImages = [
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop',
@@ -123,11 +129,10 @@ onUnmounted(() => {
 
     <!-- Project rows -->
     <section ref="listRef" class="border-t border-ink/15 mt-10">
-        <component
-            :is="project.href === '/' ? Link : 'a'"
+        <Link
             v-for="project in projects"
             :key="project.id"
-            :href="project.href"
+            :href="projectHref"
             :class="['proj-row group block border-b border-ink/15 px-6 md:px-12 py-10 md:py-14']"
             :data-cat="project.cat"
             @mouseenter="onRowEnter(project.img)"
@@ -146,6 +151,6 @@ onUnmounted(() => {
                     <span class="proj-arrow text-2xl opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">↗</span>
                 </div>
             </div>
-        </component>
+        </Link>
     </section>
 </template>

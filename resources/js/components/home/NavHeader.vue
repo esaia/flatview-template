@@ -32,6 +32,7 @@ const props = defineProps({
 
 const scrolledPast = ref(false);
 const overlayRef = ref(null);
+const menuScrimRef = ref(null);
 let menuTl = null;
 let ctx = null;
 let scrollHandler = null;
@@ -46,16 +47,25 @@ const scrimOpacity = computed(() =>
 onMounted(() => {
     const panel = overlayRef.value.querySelector(".menu-panel");
     gsap.set(overlayRef.value, { autoAlpha: 0 });
-    gsap.set(panel, { scaleY: 0, transformOrigin: "top" });
+    gsap.set(menuScrimRef.value, { autoAlpha: 0 });
+    gsap.set(panel, { scaleX: 0, transformOrigin: "right" });
 
     menuTl = gsap.timeline({
         paused: true,
-        onReverseComplete: () => gsap.set(overlayRef.value, { autoAlpha: 0 }),
+        onReverseComplete: () =>
+            gsap.set([overlayRef.value, menuScrimRef.value], {
+                autoAlpha: 0,
+            }),
     });
 
     menuTl
         .to(overlayRef.value, { autoAlpha: 1, duration: 0.4, ease: "none" })
-        .to(panel, { scaleY: 1, duration: 0.6, ease: "power4.inOut" }, 0)
+        .to(
+            menuScrimRef.value,
+            { autoAlpha: 1, duration: 0.4, ease: "none" },
+            0,
+        )
+        .to(panel, { scaleX: 1, duration: 0.6, ease: "power4.inOut" }, 0)
         .from(
             overlayRef.value.querySelectorAll(".menu-item"),
             {
@@ -216,10 +226,20 @@ function closeMenu() {
         </div>
     </header>
 
-    <!-- Fullscreen menu overlay -->
-    <div ref="overlayRef" class="fixed inset-0 z-[70] text-white">
+    <!-- Backdrop over the remaining page area while the desktop drawer is open -->
+    <div
+        ref="menuScrimRef"
+        class="fixed inset-0 z-[65] bg-black/50 cursor-pointer"
+        @click="closeMenu"
+    ></div>
+
+    <!-- Menu overlay: fullscreen on mobile, half-width drawer docked right on desktop -->
+    <div
+        ref="overlayRef"
+        class="fixed inset-0 md:inset-y-0 md:left-auto md:right-0 md:w-1/2 z-[70] text-white"
+    >
         <div
-            class="menu-panel absolute inset-0 bg-ink scale-y-0 origin-top"
+            class="menu-panel absolute inset-0 bg-ink scale-x-0 origin-right md:shadow-2xl"
         ></div>
 
         <div class="relative h-full flex flex-col px-6 md:px-12 py-6">

@@ -165,11 +165,9 @@ export default {
             { label: 'Office & Retail', value: 'commercial' },
         ],
         list: [
-            { id: 1, num: '01', name: 'Project One', location: 'Your City — District', year: '0000', cat: 'residential', href: '/', img: 0 },
-            { id: 2, num: '02', name: 'Project Two', location: 'Your City — District', year: '0000', cat: 'residential', href: '#', img: 1 },
-            { id: 3, num: '03', name: 'Project Three', location: 'Your City — District', year: '0000', cat: 'residential', href: '#', img: 2 },
-            { id: 4, num: '04', name: 'Project Four', location: 'Your City — District', year: '0000', cat: 'commercial', href: '#', img: 3 },
-            { id: 5, num: '05', name: 'Project Five', location: 'Your City — District', year: '0000', cat: 'commercial', href: '#', img: 4 },
+            { id: 1, num: '01', name: 'Project One', location: 'Your City — District', year: '2026', cat: 'residential', href: '/', img: 0 },
+            { id: 2, num: '02', name: 'Project Two', location: 'Your City — District', year: '2026', cat: 'residential', href: '#', img: 1 },
+            { id: 3, num: '03', name: 'Project Three', location: 'Your City — District', year: '2026', cat: 'commercial', href: '#', img: 2 },
         ],
         featured: {
             headline: 'Featured',

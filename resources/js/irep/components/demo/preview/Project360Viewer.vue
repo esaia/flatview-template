@@ -144,7 +144,7 @@ const actions = computed(() => shortcodeData.value?.actions);
 const containerRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const svgRef = ref<HTMLDivElement | null>(null);
-const isSidebarOpen = ref(false);
+const isSidebarOpen = ref(true);
 const isNavigating = ref(false);
 
 const frames = computed(() => props.project["360images"] ?? []);
@@ -207,8 +207,6 @@ const handleNav = (dir: -1 | 1) => {
 };
 
 onMounted(() => {
-    isSidebarOpen.value = false;
-
     const params = new URLSearchParams(window.location.search);
     const flatId = params.get("flatId");
     const projectId = params.get("projectId");

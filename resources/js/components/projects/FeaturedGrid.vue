@@ -1,12 +1,18 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import site from '../../config/siteContent'
 
 const sectionRef = ref(null)
 let ctx = null
+
+// Same admin-configurable target as the burger menu's "See Apartments" link.
+const page = usePage()
+const projectHref = computed(
+    () => page.props.seeApartmentsHref || site.nav.menuCtaHref,
+)
 
 function addCardHover(card) {
     const img = card.querySelector('img')
@@ -52,11 +58,10 @@ onUnmounted(() => {
             <span class="mask-line"><span>{{ site.projects.featured.headline }}</span></span>
         </h2>
         <div class="grid md:grid-cols-2 gap-6 md:gap-10">
-            <component
-                :is="item.href === '/' ? Link : 'a'"
+            <Link
                 v-for="(item, i) in site.projects.featured.items"
                 :key="item.name"
-                :href="item.href"
+                :href="projectHref"
                 :class="['feat-card block', i === 0 ? 'cursor-pointer' : 'md:mt-24']"
             >
                 <div class="overflow-hidden mb-5">
@@ -70,7 +75,7 @@ onUnmounted(() => {
                     <h3 class="display text-2xl md:text-3xl font-medium">{{ item.name }}</h3>
                     <span class="text-sm text-ink/50">{{ item.meta }}</span>
                 </div>
-            </component>
+            </Link>
         </div>
     </section>
 </template>
